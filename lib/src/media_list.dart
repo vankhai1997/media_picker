@@ -58,6 +58,7 @@ class _MediaListState extends State<MediaList> {
       ),
       controller: _refreshController,
       child: GridView.builder(
+        cacheExtent: MediaQuery.of(context).size.height,
         physics: BouncingScrollPhysics(),
         controller: widget.scrollController,
         itemCount: _mediaList.length,
@@ -101,7 +102,7 @@ class _MediaListState extends State<MediaList> {
     lastPage = currentPage;
     var result = await PhotoManager.requestPermission();
     if (result) {
-      List<AssetEntity> media = await album!.getAssetListPaged(currentPage, 60);
+      List<AssetEntity> media = await album!.getAssetListPaged(currentPage, 80);
       _refreshController.loadComplete();
       setState(() {
         _mediaList.addAll(media);
