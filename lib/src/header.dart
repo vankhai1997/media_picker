@@ -189,14 +189,20 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                                       borderRadius: BorderRadius.circular(3))),
                             ),
                       )
-                    : const SizedBox(),
+                    : const SizedBox(
+                        width: 24,
+                      ),
               ),
             const SizedBox(
               width: 16,
             ),
           ],
         ),
-        Divider()
+        Container(
+          width: double.infinity,
+          height: 1,
+          color: Theme.of(context).primaryColor,
+        )
       ],
     );
   }
