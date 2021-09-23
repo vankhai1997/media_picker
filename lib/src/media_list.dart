@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../media_picker_widget.dart';
 import 'header_controller.dart';
@@ -31,7 +32,8 @@ class _MediaListState extends State<MediaList> {
   int currentPage = 0;
   int? lastPage;
   AssetPathEntity? album;
-
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   List<AssetEntity> selectedMedias = [];
 
   @override
@@ -43,14 +45,20 @@ class _MediaListState extends State<MediaList> {
 
   @override
   Widget build(BuildContext context) {
-    _resetAlbum();
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scroll) {
-        _handleScrollEvent(scroll);
-        return true;
+    // _resetAlbum();
+    return SmartRefresher(
+      enablePullDown: false,
+      enablePullUp: true,
+      onLoading: () {
+        _fetchNewMedia();
       },
+      footer: CustomFooter(
+        builder: (_, s) {
+          return SizedBox();
+        },
+      ),
+      controller: _refreshController,
       child: GridView.builder(
-        cacheExtent: 1024,
         physics: BouncingScrollPhysics(),
         controller: widget.scrollController,
         itemCount: _mediaList.length,
@@ -66,7 +74,7 @@ class _MediaListState extends State<MediaList> {
             onSelected: (isSelected, media) {
               if (isSelected) {
                 setState(() => selectedMedias.add(media));
-                } else
+              } else
                 setState(() => selectedMedias
                     .removeWhere((_media) => _media.id == media.id));
               widget.headerController.updateSelection!(selectedMedias);
@@ -90,20 +98,12 @@ class _MediaListState extends State<MediaList> {
     }
   }
 
-  _handleScrollEvent(ScrollNotification scroll) {
-    if (scroll.metrics.pixels / scroll.metrics.maxScrollExtent > 0.33) {
-      if (currentPage != lastPage) {
-        _fetchNewMedia();
-      }
-    }
-  }
-
   _fetchNewMedia() async {
     lastPage = currentPage;
     var result = await PhotoManager.requestPermission();
     if (result) {
       List<AssetEntity> media = await album!.getAssetListPaged(currentPage, 60);
-
+      _refreshController.loadComplete();
       setState(() {
         _mediaList.addAll(media);
         currentPage++;

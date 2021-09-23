@@ -36,17 +36,10 @@ class _MediaTileState extends State<MediaTile>
   bool? selected;
   File? file;
   Duration _duration = Duration(milliseconds: 100);
-  AnimationController? _animationController;
-  Animation? _animation;
 
   @override
   void initState() {
-    _animationController =
-        AnimationController(vsync: this, duration: _duration);
-    _animation =
-        Tween<double>(begin: 1.0, end: 1.3).animate(_animationController!);
     selected = widget.isSelected;
-    if (selected!) _animationController!.forward();
     _initFile();
     super.initState();
   }
@@ -76,29 +69,16 @@ class _MediaTileState extends State<MediaTile>
                             (widget.maxSelect ?? 10000) &&
                         !selected!) return;
                     setState(() => selected = !selected!);
-                    if (selected!)
-                      _animationController!.forward();
-                    else
-                      _animationController!.reverse();
                     widget.onSelected(selected!, widget.media);
                   },
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: ClipRect(
-                          child: AnimatedBuilder(
-                              animation: _animation!,
-                              builder: (context, child) {
-                                return Transform.scale(
-                                  scale: _animation!.value,
-                                  child: Image.file(
-                                    file!,
-                                    fit: BoxFit.cover,
-                                    cacheWidth: 150,
-                                  ),
-                                );
-                              }),
-                        ),
+                        child: Image.file(
+                          file!,
+                          fit: BoxFit.cover,
+                          cacheWidth: 150,
+                        )
                       ),
                       Positioned.fill(
                         child: AnimatedOpacity(
@@ -169,19 +149,19 @@ class _MediaTileState extends State<MediaTile>
   bool get wantKeepAlive => true;
 }
 
-// Future<Media> convertToMedia({required AssetEntity media}) async {
-//   Media convertedMedia = Media();
-//   convertedMedia.file = await media.file;
-//   convertedMedia.mediaByte = (await media.thumbDataWithSize(1024, 1024));
-//   convertedMedia.thumbnail = await media.thumbDataWithSize(150, 150);
-//   convertedMedia.id = media.id;
-//   convertedMedia.size = media.size;
-//   convertedMedia.title = media.title;
-//   convertedMedia.creationTime = media.createDateTime;
-//   MediaType mediaType = MediaType.all;
-//   if (media.type == AssetType.video) mediaType = MediaType.video;
-//   if (media.type == AssetType.image) mediaType = MediaType.image;
-//   convertedMedia.mediaType = mediaType;
-//
-//   return convertedMedia;
-// }
+Future<Media> convertToMedia({required AssetEntity media}) async {
+  Media convertedMedia = Media();
+  convertedMedia.file = await media.file;
+  convertedMedia.mediaByte = (await media.thumbDataWithSize(1024, 1024));
+  convertedMedia.thumbnail = await media.thumbDataWithSize(150, 150);
+  convertedMedia.id = media.id;
+  convertedMedia.size = media.size;
+  convertedMedia.title = media.title;
+  convertedMedia.creationTime = media.createDateTime;
+  MediaType mediaType = MediaType.all;
+  if (media.type == AssetType.video) mediaType = MediaType.video;
+  if (media.type == AssetType.image) mediaType = MediaType.image;
+  convertedMedia.mediaType = mediaType;
+
+  return convertedMedia;
+}

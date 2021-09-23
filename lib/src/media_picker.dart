@@ -35,6 +35,7 @@ class _MediaPickerState extends State<MediaPicker> {
 
   @override
   void initState() {
+
     _fetchAlbums();
     decoration = widget.decoration ?? PickerDecoration();
     super.initState();
@@ -99,6 +100,7 @@ class _MediaPickerState extends State<MediaPicker> {
   }
 
   _fetchAlbums() async {
+    PhotoManager.clearFileCache();
     RequestType type = RequestType.common;
     if (widget.mediaType == MediaType.all)
       type = RequestType.common;
@@ -127,4 +129,3 @@ class _MediaPickerState extends State<MediaPicker> {
       widget.onCancel();
   }
 }
-
