@@ -71,7 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
           return MediaPicker(
             maxSelect: 2,
             onPick: (selectedList) {
-              setState(() => mediaList = selectedList);
               Navigator.pop(context);
             },
             onCancel: () => Navigator.pop(context),

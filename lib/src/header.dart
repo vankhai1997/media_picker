@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:media_picker_widget/src/widgets/media_tile.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -21,7 +22,7 @@ class Header extends StatefulWidget {
   final AssetPathEntity selectedAlbum;
   final VoidCallback onBack;
   final PanelController albumController;
-  final ValueChanged<List<AssetEntity>> onDone;
+  final ValueChanged<List<Media>> onDone;
   final HeaderController controller;
   final MediaCount? mediaCount;
   final PickerDecoration? decoration;
@@ -45,8 +46,8 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
 
     widget.controller.updateSelection = (selectedMediaList) {
       if (widget.mediaCount == MediaCount.multiple)
-        setState(() => selectedMedia = selectedMediaList.cast<AssetEntity>());
-      else if (selectedMediaList.length == 1) widget.onDone(selectedMediaList);
+        setState(() => selectedMedia = selectedMediaList);
+      // else if (selectedMediaList.length == 1) widget.onDone(selectedMediaList);
     };
 
     widget.controller.closeAlbumDrawer = () {
@@ -177,8 +178,18 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        onPressed: selectedMedia.length > 0
-                            ? () => widget.onDone(selectedMedia)
+                        onPressed: selectedMedia.isNotEmpty
+                            ? () {
+                                List<Media> medias = [];
+                                selectedMedia.forEach((element) {
+                                  convertToMedia(media: element).then((value) {
+                                    medias.add(value);
+                                    if (medias.length == selectedMedia.length) {
+                                      widget.onDone(medias);
+                                    }
+                                  });
+                                });
+                              }
                             : null,
                         style: widget.decoration!.completeButtonStyle ??
                             ButtonStyle(
@@ -198,11 +209,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
             ),
           ],
         ),
-        Container(
-          width: double.infinity,
-          height: 1,
-          color: Color(0xFFC2CEDB)
-        )
+        Container(width: double.infinity, height: 1, color: Color(0xFFC2CEDB))
       ],
     );
   }

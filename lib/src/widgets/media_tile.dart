@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -32,7 +32,7 @@ class MediaTile extends StatefulWidget {
 class _MediaTileState extends State<MediaTile>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   bool? selected;
-  File? file;
+  Uint8List? file;
   Duration _duration = Duration(milliseconds: 100);
 
   @override
@@ -44,7 +44,7 @@ class _MediaTileState extends State<MediaTile>
 
   Future<void> _initFile() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      final res = await widget.media.file;
+      final res = await widget.media.thumbDataWithSize(150, 150);
       setState(() {
         file = res;
       });
@@ -72,7 +72,7 @@ class _MediaTileState extends State<MediaTile>
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: Image.file(
+                        child: Image.memory(
                           file!,
                           fit: BoxFit.cover,
                           cacheWidth: 150,

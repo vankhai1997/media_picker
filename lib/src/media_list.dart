@@ -45,7 +45,6 @@ class _MediaListState extends State<MediaList> {
 
   @override
   Widget build(BuildContext context) {
-    // _resetAlbum();
     return SmartRefresher(
       enablePullDown: false,
       enablePullUp: true,
