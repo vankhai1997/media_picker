@@ -44,7 +44,7 @@ class _MediaTileState extends State<MediaTile>
 
   Future<void> _initFile() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      final res = await widget.media.thumbDataWithSize(100, 100);
+      final res = await widget.media.thumbDataWithSize(200, 200);
       setState(() {
         file = res;
       });
@@ -75,7 +75,7 @@ class _MediaTileState extends State<MediaTile>
                         child: Image.memory(
                           file!,
                           fit: BoxFit.cover,
-                          cacheWidth: 100,
+                          cacheWidth: 200,
                         )
                       ),
                       Positioned.fill(
