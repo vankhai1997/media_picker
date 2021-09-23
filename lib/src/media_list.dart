@@ -9,7 +9,6 @@ class MediaList extends StatefulWidget {
   MediaList({
     required this.album,
     required this.headerController,
-    required this.previousList,
     this.mediaCount,
     this.decoration,
     this.maxSelected,
@@ -18,7 +17,6 @@ class MediaList extends StatefulWidget {
 
   final AssetPathEntity album;
   final HeaderController headerController;
-  final List<Media> previousList;
   final MediaCount? mediaCount;
   final PickerDecoration? decoration;
   final ScrollController? scrollController;
@@ -34,7 +32,7 @@ class _MediaListState extends State<MediaList> {
   int? lastPage;
   AssetPathEntity? album;
 
-  List<Media> selectedMedias = [];
+  List<AssetEntity> selectedMedias = [];
 
   @override
   void initState() {
@@ -52,6 +50,7 @@ class _MediaListState extends State<MediaList> {
         return true;
       },
       child: GridView.builder(
+        cacheExtent: 1024,
         physics: BouncingScrollPhysics(),
         controller: widget.scrollController,
         itemCount: _mediaList.length,

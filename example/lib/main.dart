@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +29,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Media> mediaList = [];
+  List<AssetEntity> mediaList = [];
 
   @override
   void initState() {
@@ -55,19 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-        children: List.generate(
-            mediaList.length,
-            (index) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 80,
-                    width: 80,
-                    child: Image.memory(
-                      mediaList[index].thumbnail,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )),
+        children: List.generate(mediaList.length, (index) => Text('data')),
       ),
     );
   }
@@ -81,7 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context) {
           return MediaPicker(
             maxSelect: 2,
-            mediaList: mediaList,
             onPick: (selectedList) {
               setState(() => mediaList = selectedList);
               Navigator.pop(context);
@@ -90,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mediaCount: MediaCount.multiple,
             mediaType: MediaType.all,
             decoration: PickerDecoration(
-              columnCount: 5,
+              columnCount: 3,
               actionBarPosition: ActionBarPosition.top,
               blurStrength: 2,
               completeText: 'Next',

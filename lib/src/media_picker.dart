@@ -3,7 +3,6 @@ part of media_picker_widget;
 class MediaPicker extends StatefulWidget {
   MediaPicker({
     required this.onPick,
-    required this.mediaList,
     required this.onCancel,
     this.mediaCount = MediaCount.multiple,
     this.mediaType = MediaType.all,
@@ -12,8 +11,8 @@ class MediaPicker extends StatefulWidget {
     this.maxSelect,
   });
 
-  final ValueChanged<List<Media>> onPick;
-  final List<Media> mediaList;
+  final ValueChanged<List<AssetEntity>> onPick;
+
   final VoidCallback onCancel;
   final MediaCount mediaCount;
   final MediaType mediaType;
@@ -63,7 +62,6 @@ class _MediaPickerState extends State<MediaPicker> {
                             maxSelected: widget.maxSelect,
                             album: selectedAlbum!,
                             headerController: headerController,
-                            previousList: widget.mediaList,
                             mediaCount: widget.mediaCount,
                             decoration: widget.decoration,
                             scrollController: widget.scrollController,
@@ -130,17 +128,3 @@ class _MediaPickerState extends State<MediaPicker> {
   }
 }
 
-openCamera({required ValueChanged<Media> onCapture}) async {
-  final picker = ImagePicker();
-  final PickedFile? pickedFile =
-      await picker.getImage(source: ImageSource.camera);
-
-  if (pickedFile != null) {
-    List<AssetPathEntity> album =
-        await PhotoManager.getAssetPathList(onlyAll: true);
-    List<AssetEntity> media = await album[0].getAssetListPaged(0, 1);
-
-    Media convertedMedia = await convertToMedia(media: media[0]);
-    onCapture(convertedMedia);
-  }
-}
