@@ -56,7 +56,7 @@ class _MediaListState extends State<MediaList> {
         controller: widget.scrollController,
         itemCount: _mediaList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisExtent: 2,
+            mainAxisSpacing: 2,
             crossAxisSpacing: 2,
             crossAxisCount: widget.decoration!.columnCount),
         itemBuilder: (BuildContext context, int index) {
@@ -67,7 +67,7 @@ class _MediaListState extends State<MediaList> {
             onSelected: (isSelected, media) {
               if (isSelected) {
                 setState(() => selectedMedias.add(media));
-              } else
+                } else
                 setState(() => selectedMedias
                     .removeWhere((_media) => _media.id == media.id));
               widget.headerController.updateSelection!(selectedMedias);
