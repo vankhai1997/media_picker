@@ -130,7 +130,7 @@ class _MediaTileState extends State<MediaTile>
             Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(4),
                 child: AnimatedOpacity(
                   curve: Curves.easeOut,
                   duration: _duration,

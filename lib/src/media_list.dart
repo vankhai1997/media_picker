@@ -56,6 +56,8 @@ class _MediaListState extends State<MediaList> {
         controller: widget.scrollController,
         itemCount: _mediaList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisExtent: 2,
+            crossAxisSpacing: 2,
             crossAxisCount: widget.decoration!.columnCount),
         itemBuilder: (BuildContext context, int index) {
           return MediaTile(
