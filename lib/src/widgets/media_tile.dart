@@ -83,6 +83,8 @@ class _MediaTileState extends State<MediaTile>
                                       child: Image.memory(
                                         media!.thumbnail!,
                                         fit: BoxFit.cover,
+                                        cacheWidth: 150,
+                                        cacheHeight: 150,
                                       ),
                                     );
                                   }),
@@ -168,13 +170,12 @@ class _MediaTileState extends State<MediaTile>
 Future<Media> convertToMedia({required AssetEntity media}) async {
   Media convertedMedia = Media();
   convertedMedia.file = await media.file;
-  convertedMedia.mediaByte = await media.thumbDataWithSize(1024, 1024);
+  convertedMedia.mediaByte = (await media.thumbDataWithSize(1024, 1024));
   convertedMedia.thumbnail = await media.thumbDataWithSize(200, 200);
   convertedMedia.id = media.id;
   convertedMedia.size = media.size;
   convertedMedia.title = media.title;
   convertedMedia.creationTime = media.createDateTime;
-
   MediaType mediaType = MediaType.all;
   if (media.type == AssetType.video) mediaType = MediaType.video;
   if (media.type == AssetType.image) mediaType = MediaType.image;

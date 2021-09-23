@@ -90,6 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mediaCount: MediaCount.multiple,
             mediaType: MediaType.all,
             decoration: PickerDecoration(
+              columnCount: 5,
               actionBarPosition: ActionBarPosition.top,
               blurStrength: 2,
               completeText: 'Next',
