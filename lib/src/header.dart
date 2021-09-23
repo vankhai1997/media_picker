@@ -201,7 +201,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
         Container(
           width: double.infinity,
           height: 1,
-          color: Theme.of(context).primaryColor,
+          color: Color(0xFFC2CEDB)
         )
       ],
     );
