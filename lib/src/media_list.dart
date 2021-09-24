@@ -44,6 +44,12 @@ class _MediaListState extends State<MediaList> {
   }
 
   @override
+  void didUpdateWidget(covariant MediaList oldWidget) {
+    _resetAlbum();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SmartRefresher(
       enablePullDown: false,
