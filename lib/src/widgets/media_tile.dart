@@ -44,7 +44,7 @@ class _MediaTileState extends State<MediaTile>
 
   Future<void> _initFile() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      final res = await widget.media.thumbDataWithSize(200, 200);
+      final res = await widget.media.thumbDataWithSize(300, 300);
       setState(() {
         file = res;
       });
