@@ -43,11 +43,9 @@ class _MediaTileState extends State<MediaTile>
   }
 
   Future<void> _initFile() async {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      final res = await widget.media.thumbDataWithSize(300, 300);
-      setState(() {
-        file = res;
-      });
+    final res = await widget.media.thumbDataWithSize(250, 250);
+    setState(() {
+      file = res;
     });
   }
 
@@ -72,12 +70,11 @@ class _MediaTileState extends State<MediaTile>
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: Image.memory(
-                          file!,
-                          fit: BoxFit.cover,
-                          cacheWidth: 200,
-                        )
-                      ),
+                          child: Image.memory(
+                        file!,
+                        fit: BoxFit.cover,
+                        cacheWidth: 200,
+                      )),
                       Positioned.fill(
                         child: AnimatedOpacity(
                           opacity: selected! ? 1 : 0,
@@ -149,9 +146,7 @@ class _MediaTileState extends State<MediaTile>
 
 Future<Media> convertToMedia({required AssetEntity media}) async {
   Media convertedMedia = Media();
-  convertedMedia.file = await media.file;
   convertedMedia.mediaByte = (await media.thumbDataWithSize(1024, 1024));
-  convertedMedia.thumbnail = await media.thumbDataWithSize(150, 150);
   convertedMedia.id = media.id;
   convertedMedia.size = media.size;
   convertedMedia.title = media.title;

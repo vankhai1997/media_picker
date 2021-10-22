@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import '../media_picker_widget.dart';
 import 'header_controller.dart';
 import 'widgets/media_tile.dart';
@@ -31,9 +29,8 @@ class _MediaListState extends State<MediaList> {
   List<AssetEntity> _mediaList = [];
   int currentPage = 0;
   int? lastPage;
+  bool empty = false;
   AssetPathEntity? album;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
   List<AssetEntity> selectedMedias = [];
 
   @override
@@ -49,47 +46,45 @@ class _MediaListState extends State<MediaList> {
     super.didUpdateWidget(oldWidget);
   }
 
+  _handleScrollEvent(ScrollNotification scroll) {
+    if (scroll.metrics.pixels / scroll.metrics.maxScrollExtent > 0.33) {
+      if (currentPage != lastPage) {
+        _fetchNewMedia();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      enablePullDown: false,
-      enablePullUp: true,
-      onLoading: () {
-        _fetchNewMedia();
+    return GridView.builder(
+      cacheExtent: MediaQuery.of(context).size.height*2,
+      physics: BouncingScrollPhysics(),
+      controller: widget.scrollController,
+      itemCount: _mediaList.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisSpacing: 2,
+          crossAxisSpacing: 2,
+          crossAxisCount: widget.decoration!.columnCount),
+      itemBuilder: (BuildContext context, int index) {
+        if (index == _mediaList.length - 20 && !empty) {
+          _fetchNewMedia();
+        }
+        return MediaTile(
+          totalSelect: selectedMedias.length,
+          maxSelect: widget.maxSelected,
+          media: _mediaList[index],
+          onSelected: (isSelected, media) {
+            if (isSelected) {
+              setState(() => selectedMedias.add(media));
+            } else
+              setState(() => selectedMedias
+                  .removeWhere((_media) => _media.id == media.id));
+            widget.headerController.updateSelection!(selectedMedias);
+          },
+          isSelected: isPreviouslySelected(_mediaList[index]),
+          decoration: widget.decoration,
+        );
       },
-      footer: CustomFooter(
-        builder: (_, s) {
-          return SizedBox();
-        },
-      ),
-      controller: _refreshController,
-      child: GridView.builder(
-        cacheExtent: MediaQuery.of(context).size.height,
-        physics: BouncingScrollPhysics(),
-        controller: widget.scrollController,
-        itemCount: _mediaList.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisSpacing: 2,
-            crossAxisSpacing: 2,
-            crossAxisCount: widget.decoration!.columnCount),
-        itemBuilder: (BuildContext context, int index) {
-          return MediaTile(
-            totalSelect: selectedMedias.length,
-            maxSelect: widget.maxSelected,
-            media: _mediaList[index],
-            onSelected: (isSelected, media) {
-              if (isSelected) {
-                setState(() => selectedMedias.add(media));
-              } else
-                setState(() => selectedMedias
-                    .removeWhere((_media) => _media.id == media.id));
-              widget.headerController.updateSelection!(selectedMedias);
-            },
-            isSelected: isPreviouslySelected(_mediaList[index]),
-            decoration: widget.decoration,
-          );
-        },
-      ),
     );
   }
 
@@ -109,8 +104,8 @@ class _MediaListState extends State<MediaList> {
     var result = await PhotoManager.requestPermission();
     if (result) {
       List<AssetEntity> media = await album!.getAssetListPaged(currentPage, 80);
-      _refreshController.loadComplete();
       setState(() {
+        empty = media.isEmpty;
         _mediaList.addAll(media);
         currentPage++;
       });

@@ -110,7 +110,7 @@ class _MediaPickerState extends State<MediaPicker> {
     var result = await PhotoManager.requestPermission();
     if (result) {
       List<AssetPathEntity> albums =
-          await PhotoManager.getAssetPathList(type: type, onlyAll: true);
+          await PhotoManager.getAssetPathList(type: type);
       setState(() {
         _albums = albums;
         if (albums.isEmpty) return;

@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (context) {
           return MediaPicker(
-            maxSelect: 2,
+            maxSelect: 3,
             onPick: (selectedList) {
               Navigator.pop(context);
             },
