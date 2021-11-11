@@ -22,7 +22,7 @@ class Header extends StatefulWidget {
   final AssetPathEntity selectedAlbum;
   final VoidCallback onBack;
   final PanelController albumController;
-  final ValueChanged<List<Media>> onDone;
+  final ValueChanged<List<AssetEntity>> onDone;
   final HeaderController controller;
   final MediaCount? mediaCount;
   final PickerDecoration? decoration;
@@ -180,15 +180,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                         ),
                         onPressed: selectedMedia.isNotEmpty
                             ? () {
-                                List<Media> medias = [];
-                                selectedMedia.forEach((element) {
-                                  convertToMedia(media: element).then((value) {
-                                    medias.add(value);
-                                    if (medias.length == selectedMedia.length) {
-                                      widget.onDone(medias);
-                                    }
-                                  });
-                                });
+                                widget.onDone(selectedMedia);
                               }
                             : null,
                         style: widget.decoration!.completeButtonStyle ??

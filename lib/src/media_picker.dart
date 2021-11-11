@@ -11,7 +11,7 @@ class MediaPicker extends StatefulWidget {
     this.maxSelect,
   });
 
-  final ValueChanged<List<Media>> onPick;
+  final ValueChanged<List<AssetEntity>> onPick;
 
   final VoidCallback onCancel;
   final MediaCount mediaCount;

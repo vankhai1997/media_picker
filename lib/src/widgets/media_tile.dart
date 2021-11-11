@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:media_picker_widget/res.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../media_picker_widget.dart';
@@ -55,7 +57,15 @@ class _MediaTileState extends State<MediaTile>
     return Padding(
       padding: const EdgeInsets.all(0.5),
       child: file == null
-          ? CupertinoActivityIndicator()
+          ? Container(
+              width: 150,
+              height: 150,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: Color(0xFFF9FAFC),
+              ),
+            )
           : Stack(
               children: [
                 Positioned.fill(
