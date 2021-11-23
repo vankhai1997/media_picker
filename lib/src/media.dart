@@ -6,7 +6,7 @@ class Media {
   Uint8List? thumbnail;
   Uint8List? mediaByte;
   Size? size;
-  double? length;
+  int? length;
   DateTime? creationTime;
   String? title;
   MediaType? mediaType;
