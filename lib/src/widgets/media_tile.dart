@@ -153,18 +153,18 @@ class _MediaTileState extends State<MediaTile>
   @override
   bool get wantKeepAlive => true;
 }
-
-Future<Media> convertToMedia({required AssetEntity media}) async {
-  Media convertedMedia = Media();
-  convertedMedia.mediaByte = (await media.thumbDataWithSize(1024, 1024));
-  convertedMedia.id = media.id;
-  convertedMedia.size = media.size;
-  convertedMedia.title = media.title;
-  convertedMedia.creationTime = media.createDateTime;
-  MediaType mediaType = MediaType.all;
-  if (media.type == AssetType.video) mediaType = MediaType.video;
-  if (media.type == AssetType.image) mediaType = MediaType.image;
-  convertedMedia.mediaType = mediaType;
-
-  return convertedMedia;
-}
+//
+// Future<Media> convertToMedia({required AssetEntity media}) async {
+//   Media convertedMedia = Media();
+//   convertedMedia.mediaByte = (await media.thumbDataWithSize(1024, 1024));
+//   convertedMedia.id = media.id;
+//   convertedMedia.size = media.size;
+//   convertedMedia.title = media.title;
+//   convertedMedia.creationTime = media.createDateTime;
+//   MediaType mediaType = MediaType.all;
+//   if (media.type == AssetType.video) mediaType = MediaType.video;
+//   if (media.type == AssetType.image) mediaType = MediaType.image;
+//   convertedMedia.mediaType = mediaType;
+//
+//   return convertedMedia;
+// }
