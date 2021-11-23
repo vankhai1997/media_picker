@@ -9,7 +9,7 @@ class Media {
   int? length;
   DateTime? creationTime;
   String? title;
-  MediaType? mediaType;
+  String? mediaType;
 
   Media({
     this.id,
