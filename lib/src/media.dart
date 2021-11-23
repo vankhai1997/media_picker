@@ -6,6 +6,7 @@ class Media {
   Uint8List? thumbnail;
   Uint8List? mediaByte;
   Size? size;
+  double? length;
   DateTime? creationTime;
   String? title;
   MediaType? mediaType;
@@ -15,6 +16,7 @@ class Media {
     this.file,
     this.thumbnail,
     this.mediaByte,
+    this.length,
     this.size,
     this.creationTime,
     this.title,
