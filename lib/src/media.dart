@@ -9,6 +9,7 @@ class Media {
   int? length;
   DateTime? creationTime;
   String? title;
+  String? md5;
   String? mediaType;
 
   Media({
@@ -17,6 +18,7 @@ class Media {
     this.thumbnail,
     this.mediaByte,
     this.length,
+    this.md5,
     this.size,
     this.creationTime,
     this.title,
