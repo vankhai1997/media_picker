@@ -1,7 +1,7 @@
 part of media_picker_widget;
 
 class Media {
-  File? file;
+  String ? path;
   String? id;
   Uint8List? thumbnail;
   Uint8List? mediaByte;
@@ -14,7 +14,7 @@ class Media {
 
   Media({
     this.id,
-    this.file,
+    this.path,
     this.thumbnail,
     this.mediaByte,
     this.length,
