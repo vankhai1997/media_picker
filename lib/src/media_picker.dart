@@ -101,8 +101,9 @@ class _MediaPickerState extends State<MediaPicker> {
         thumbnail: await pickedFile.readAsBytes(),
         creationTime: DateTime.now(),
         path: pickedFile.path,
+        mediaType: 'image',
         mediaByte: await pickedFile.readAsBytes(),
-        title: 'capturedImage',
+        title: pickedFile.path,
       );
       onCapture(converted);
     }
