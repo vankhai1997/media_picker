@@ -94,7 +94,6 @@ class _MediaPickerState extends State<MediaPicker> {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile =
         await _picker.pickImage(source: ImageSource.camera);
-
     if (pickedFile != null) {
       Media converted = Media(
         id: UniqueKey().toString(),

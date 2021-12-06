@@ -47,7 +47,7 @@ class _MediaTileState extends State<MediaTile>
   Future<void> _initFile() async {
     final res = await widget.media.thumbDataWithSize(250, 250);
     setState(() {
-      file = res;
+      if (mounted) file = res;
     });
   }
 
