@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../media_picker_widget.dart';
+import 'camera.dart';
 import 'header_controller.dart';
 import 'widgets/media_tile.dart';
 
@@ -12,6 +14,7 @@ class MediaList extends StatefulWidget {
     this.decoration,
     this.maxSelected,
     this.scrollController,
+    required this.onTapCamera,
   });
 
   final AssetPathEntity album;
@@ -19,6 +22,7 @@ class MediaList extends StatefulWidget {
   final MediaCount? mediaCount;
   final PickerDecoration? decoration;
   final ScrollController? scrollController;
+  final Function() onTapCamera;
   final int? maxSelected;
 
   @override
@@ -57,7 +61,7 @@ class _MediaListState extends State<MediaList> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      cacheExtent: MediaQuery.of(context).size.height*2,
+      cacheExtent: MediaQuery.of(context).size.height * 2,
       physics: BouncingScrollPhysics(),
       controller: widget.scrollController,
       itemCount: _mediaList.length,
@@ -66,6 +70,22 @@ class _MediaListState extends State<MediaList> {
           crossAxisSpacing: 2,
           crossAxisCount: widget.decoration!.columnCount),
       itemBuilder: (BuildContext context, int index) {
+        if (index == 0) {
+          return Stack(
+            alignment: Alignment.center,
+            fit: StackFit.expand,
+            children: [
+              InkWell(onTap: widget.onTapCamera, child: CameraWidget()),
+              Center(
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 36,
+                  color: Colors.white.withOpacity(0.5),
+                ),
+              )
+            ],
+          );
+        }
         if (index == _mediaList.length - 20 && !empty) {
           _fetchNewMedia();
         }
@@ -98,6 +118,7 @@ class _MediaListState extends State<MediaList> {
       }
     }
   }
+
 
   _fetchNewMedia() async {
     lastPage = currentPage;

@@ -82,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
               blurStrength: 2,
               completeText: 'Next',
             ),
+            captureCamera: (Media value) {},
           );
         });
   }
