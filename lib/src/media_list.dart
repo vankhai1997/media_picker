@@ -64,13 +64,13 @@ class _MediaListState extends State<MediaList> {
       cacheExtent: MediaQuery.of(context).size.height * 2,
       physics: BouncingScrollPhysics(),
       controller: widget.scrollController,
-      itemCount: _mediaList.length,
+      itemCount: _mediaList.length + 1,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           mainAxisSpacing: 2,
           crossAxisSpacing: 2,
           crossAxisCount: widget.decoration!.columnCount),
-      itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
+      itemBuilder: (BuildContext context, int i) {
+        if (i == 0) {
           return Stack(
             alignment: Alignment.center,
             fit: StackFit.expand,
@@ -86,6 +86,7 @@ class _MediaListState extends State<MediaList> {
             ],
           );
         }
+        final index = i + 1;
         if (index == _mediaList.length - 20 && !empty) {
           _fetchNewMedia();
         }
@@ -118,7 +119,6 @@ class _MediaListState extends State<MediaList> {
       }
     }
   }
-
 
   _fetchNewMedia() async {
     lastPage = currentPage;
