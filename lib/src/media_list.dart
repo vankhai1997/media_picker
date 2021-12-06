@@ -71,19 +71,31 @@ class _MediaListState extends State<MediaList> {
           crossAxisCount: widget.decoration!.columnCount),
       itemBuilder: (BuildContext context, int i) {
         if (i == 0) {
-          return Stack(
-            alignment: Alignment.center,
-            fit: StackFit.expand,
-            children: [
-              InkWell(onTap: widget.onTapCamera, child: CameraWidget()),
-              Center(
-                child: Icon(
-                  Icons.camera_alt,
-                  size: 36,
-                  color: Colors.white.withOpacity(0.5),
-                ),
-              )
-            ],
+          return InkWell(
+            onTap: widget.onTapCamera,
+            child: Stack(
+              alignment: Alignment.center,
+              fit: StackFit.expand,
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.camera_alt,
+                        size: 36,
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                      Text(
+                        'Chụp ảnh',
+                        style: TextStyle(
+                            color: Colors.black.withOpacity(0.5), fontSize: 16),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           );
         }
         final index = i + 1;

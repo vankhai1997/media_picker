@@ -6,7 +6,8 @@ class CameraWidget extends StatefulWidget {
   _CameraWidgetState createState() => _CameraWidgetState();
 }
 
-class _CameraWidgetState extends State<CameraWidget> {
+class _CameraWidgetState extends State<CameraWidget>
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   CameraController? controller;
 
   @override
@@ -17,7 +18,9 @@ class _CameraWidgetState extends State<CameraWidget> {
 
   Future _initCamera() async {
     final cameras = await availableCameras();
-
+    if (controller != null) {
+      await controller!.dispose();
+    }
     controller = CameraController(cameras[0], ResolutionPreset.medium);
     controller?.initialize().then((_) {
       if (!mounted) {
@@ -28,6 +31,20 @@ class _CameraWidgetState extends State<CameraWidget> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = controller;
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      _initCamera();
+    }
+  }
+
+  @override
   void dispose() {
     controller?.dispose();
     super.dispose();
@@ -35,6 +52,7 @@ class _CameraWidgetState extends State<CameraWidget> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (controller == null || !controller!.value.isInitialized) {
       return const SizedBox();
     }
@@ -42,4 +60,7 @@ class _CameraWidgetState extends State<CameraWidget> {
         aspectRatio: controller!.value.aspectRatio,
         child: CameraPreview(controller!));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
