@@ -98,7 +98,7 @@ class _MediaListState extends State<MediaList> {
             ),
           );
         }
-        final index = i + 1;
+        final index = i - 1;
         if (index == _mediaList.length - 20 && !empty) {
           _fetchNewMedia();
         }

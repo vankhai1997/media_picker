@@ -92,8 +92,8 @@ class _MediaPickerState extends State<MediaPicker> {
 
   _openCamera({required ValueChanged<Media> onCapture}) async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.camera,maxHeight: 1024,maxWidth:896 );
+    final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.camera, maxHeight: 1024, maxWidth: 896);
     if (pickedFile != null) {
       Media converted = Media(
         id: UniqueKey().toString(),
