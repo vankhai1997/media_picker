@@ -96,14 +96,11 @@ class _MediaPickerState extends State<MediaPicker> {
         source: ImageSource.camera, maxHeight: 1024, maxWidth: 896);
     if (pickedFile != null) {
       final _byte = await pickedFile.readAsBytes();
-      var decodedImage = await decodeImageFromList(_byte);
       Media converted = Media(
         id: UniqueKey().toString(),
         thumbnail: _byte,
         creationTime: DateTime.now(),
         path: pickedFile.path,
-        size:
-            Size(decodedImage.width.toDouble(), decodedImage.height.toDouble()),
         mediaType: 'image',
         mediaByte: await pickedFile.readAsBytes(),
         title: pickedFile.path,
