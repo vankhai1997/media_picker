@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../media_picker_widget.dart';
-import 'camera.dart';
 import 'header_controller.dart';
 import 'widgets/media_tile.dart';
 
@@ -134,8 +132,9 @@ class _MediaListState extends State<MediaList> {
 
   _fetchNewMedia() async {
     lastPage = currentPage;
-    var result = await PhotoManager.requestPermission();
-    if (result) {
+    var result = await PhotoManager.requestPermissionExtend();
+    if (result == PermissionState.limited ||
+        result == PermissionState.authorized) {
       List<AssetEntity> media = await album!.getAssetListPaged(currentPage, 80);
       setState(() {
         empty = media.isEmpty;
