@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -29,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<AssetEntity> mediaList = [];
+  List<File> mediaList = [];
 
   @override
   void initState() {
@@ -56,7 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-        children: List.generate(mediaList.length, (index) => Text('data')),
+        children: List.generate(
+            mediaList.length, (index) => Image.file(mediaList[index])),
       ),
     );
   }
@@ -71,6 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
           return MediaPicker(
             maxSelect: 3,
             onPick: (selectedList) {
+              Future.forEach<AssetEntity>(selectedList, (element) async {
+                final _file = await element.file;
+                setState(() {
+                  mediaList.add(_file);
+                });
+              });
               Navigator.pop(context);
             },
             onCancel: () => Navigator.pop(context),

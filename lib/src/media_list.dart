@@ -61,7 +61,7 @@ class _MediaListState extends State<MediaList> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      cacheExtent: MediaQuery.of(context).size.height * 2,
+      addAutomaticKeepAlives: false,
       physics: BouncingScrollPhysics(),
       controller: widget.scrollController,
       itemCount: _mediaList.length + 1,
