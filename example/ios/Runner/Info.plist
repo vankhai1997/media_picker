@@ -39,6 +39,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSAppleMusicUsageDescription</key>
+    	<string>This app requires to access media library</string>
+    	<key>NSCameraUsageDescription</key>
+    	<string>This app requires to access camera</string>
+    	<key>NSContactsUsageDescription</key>
+    	<string>This app requires contacts access to function properly.</string>
+    	<key>NSMicrophoneUsageDescription</key>
+    	<string>This app requires to access microphone</string>
+    	<key>NSPhotoLibraryUsageDescription</key>
+    	<string>This app requires to access photo library</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

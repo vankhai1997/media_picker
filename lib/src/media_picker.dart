@@ -33,6 +33,7 @@ class _MediaPickerState extends State<MediaPicker> {
 
   PanelController albumController = PanelController();
   HeaderController headerController = HeaderController();
+  bool _showWarning = false;
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ class _MediaPickerState extends State<MediaPicker> {
                   children: [
                     if (decoration!.actionBarPosition == ActionBarPosition.top)
                       _buildHeader(),
+                    _buildWarning(),
                     Expanded(
                         child: Stack(
                       children: [
@@ -109,6 +111,35 @@ class _MediaPickerState extends State<MediaPicker> {
     }
   }
 
+  Widget _buildWarning() {
+    return Visibility(
+      visible: _showWarning,
+      child: Container(
+          color: Color(0xFFE5E9F2),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: RichText(
+            text: new TextSpan(
+                text:
+                    'Bạn vừa cấp quyền cho Meey Team chọn một vài ảnh nhất định.',
+                style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF1C2433)),
+                children: [
+                  new TextSpan(
+                    text: 'Thay đổi quyền tại đây',
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF2174E2)),
+                    recognizer: new TapGestureRecognizer()
+                      ..onTap = () => PhotoManager.openSetting(),
+                  )
+                ]),
+          )),
+    );
+  }
+
   Widget _buildHeader() {
     return Header(
       onBack: handleBackPress,
@@ -129,9 +160,14 @@ class _MediaPickerState extends State<MediaPicker> {
     else if (widget.mediaType == MediaType.video)
       type = RequestType.video;
     else if (widget.mediaType == MediaType.image) type = RequestType.image;
-
-    var result = await PhotoManager.requestPermission();
-    if (result) {
+    var result = await PhotoManager.requestPermissionExtend();
+    if (result == PermissionState.limited) {
+      setState(() {
+        _showWarning = true;
+      });
+    }
+    if (result == PermissionState.limited ||
+        result == PermissionState.authorized) {
       List<AssetPathEntity> albums =
           await PhotoManager.getAssetPathList(type: type, onlyAll: true);
       setState(() {
