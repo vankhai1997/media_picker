@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -34,6 +35,7 @@ class MediaTile extends StatefulWidget {
 class _MediaTileState extends State<MediaTile>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   bool? selected;
+  String? path;
   Uint8List? file;
   Duration _duration = Duration(milliseconds: 100);
 
@@ -45,10 +47,22 @@ class _MediaTileState extends State<MediaTile>
   }
 
   Future<void> _initFile() async {
-    final res = await widget.media.thumbDataWithSize(250, 250);
-    setState(() {
-      if (mounted) file = res;
-    });
+    if (widget.media.type == AssetType.video) {
+      final res = await widget.media.thumbDataWithSize(300, 300);
+      if (mounted) {
+        setState(() {
+          file = res;
+        });
+      }
+      return;
+    }
+    final res = await widget.media.file;
+    if (mounted) {
+      setState(() {
+        path = res!.path;
+      });
+      print('====path $path');
+    }
   }
 
   @override
@@ -56,7 +70,7 @@ class _MediaTileState extends State<MediaTile>
     super.build(context);
     return Padding(
       padding: const EdgeInsets.all(0.5),
-      child: file == null
+      child: path == null && file == null
           ? Container(
               width: 150,
               height: 150,
@@ -72,7 +86,7 @@ class _MediaTileState extends State<MediaTile>
                     child: InkWell(
                   onTap: () {
                     if ((widget.totalSelect ?? 0) >=
-                            (widget.maxSelect ?? 10000) &&
+                            (widget.maxSelect ?? 1000000) &&
                         !selected!) return;
                     setState(() => selected = !selected!);
                     widget.onSelected(selected!, widget.media);
@@ -80,11 +94,17 @@ class _MediaTileState extends State<MediaTile>
                   child: Stack(
                     children: [
                       Positioned.fill(
-                          child: Image.memory(
-                        file!,
-                        fit: BoxFit.cover,
-                        cacheWidth: 200,
-                      )),
+                          child: widget.media.type == AssetType.video
+                              ? Image.memory(
+                                  file!,
+                                  fit: BoxFit.cover,
+                                  cacheWidth: 300,
+                                )
+                              : Image.file(
+                                  File(path!),
+                                  fit: BoxFit.cover,
+                                  cacheWidth: 300,
+                                )),
                       Positioned.fill(
                         child: AnimatedOpacity(
                           opacity: selected! ? 1 : 0,
