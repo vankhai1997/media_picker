@@ -112,7 +112,7 @@
         <entry key="flutter_svg">
           <value>
             <list>
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_svg-0.22.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_svg-1.0.3/lib" />
             </list>
           </value>
         </entry>
@@ -213,14 +213,14 @@
         <entry key="path_drawing">
           <value>
             <list>
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_drawing-0.5.1+1/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_drawing-1.0.0/lib" />
             </list>
           </value>
         </entry>
         <entry key="path_parsing">
           <value>
             <list>
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_parsing-0.2.1/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_parsing-1.0.0/lib" />
             </list>
           </value>
         </entry>
@@ -241,8 +241,7 @@
         <entry key="photo_manager">
           <value>
             <list>
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/photo_manager-1.3.4/lib" />
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/photo_manager-1.3.10/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/photo_manager-2.1.1/lib" />
             </list>
           </value>
         </entry>
@@ -364,7 +363,7 @@
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_lints-1.0.4/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.3/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_svg-0.22.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_svg-1.0.3/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http-0.13.3/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http-0.13.4/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib" />
@@ -379,12 +378,11 @@
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/material_color_utilities-0.1.3/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/meta-1.7.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path-1.8.0/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_drawing-0.5.1+1/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_parsing-0.2.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_drawing-1.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_parsing-1.0.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/pedantic-1.11.1/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/petitparser-4.4.0/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/photo_manager-1.3.10/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/photo_manager-1.3.4/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/photo_manager-2.1.1/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/plugin_platform_interface-2.0.1/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/plugin_platform_interface-2.0.2/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/quiver-3.0.1+1/lib" />

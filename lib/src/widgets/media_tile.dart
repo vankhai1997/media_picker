@@ -42,27 +42,28 @@ class _MediaTileState extends State<MediaTile>
   @override
   void initState() {
     selected = widget.isSelected;
-    _initFile();
     super.initState();
   }
 
   Future<void> _initFile() async {
-    if (widget.media.type == AssetType.video) {
-      final res = await widget.media.thumbDataWithSize(960, 1280,quality: 45);
-      if (mounted) {
-        setState(() {
-          file = res;
-        });
-      }
-      return;
-    }
-    final res = await widget.media.file;
-    if (mounted) {
-      setState(() {
-        path = res!.path;
-      });
-      print('====path $path');
-    }
+    // if (widget.media.type == AssetType.video) {
+    //
+    //   return;
+    // }
+    // final res = await widget.media.file;
+    // if (mounted) {
+    //   setState(() {
+    //     path = res!.path;
+    //   });
+    //   print('====path $path');
+    // }
+
+    // final res = await widget.media.thumbDataWithSize(960, 1280, quality: 45);
+    // if (mounted) {
+    //   setState(() {
+    //     file = res;
+    //   });
+    // }
   }
 
   @override
@@ -70,17 +71,7 @@ class _MediaTileState extends State<MediaTile>
     super.build(context);
     return Padding(
       padding: const EdgeInsets.all(0.5),
-      child: path == null && file == null
-          ? Container(
-              width: 150,
-              height: 150,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: Color(0xFFF9FAFC),
-              ),
-            )
-          : Stack(
+      child:Stack(
               children: [
                 Positioned.fill(
                     child: InkWell(
@@ -94,17 +85,15 @@ class _MediaTileState extends State<MediaTile>
                   child: Stack(
                     children: [
                       Positioned.fill(
-                          child: widget.media.type == AssetType.video
-                              ? Image.memory(
-                                  file!,
-                                  fit: BoxFit.cover,
-                                  cacheWidth: 300,
-                                )
-                              : Image.file(
-                                  File(path!),
-                                  fit: BoxFit.cover,
-                                  cacheWidth: 300,
-                                )),
+                          child: Image(
+                            image: AssetEntityImageProvider(
+                              widget.media,
+                              isOriginal: false,
+                              thumbnailSize: const ThumbnailSize.square(300),
+                              thumbnailFormat: ThumbnailFormat.jpeg,
+                            ),
+                            fit: BoxFit.cover,
+                          )),
                       Positioned.fill(
                         child: AnimatedOpacity(
                           opacity: selected! ? 1 : 0,

@@ -135,7 +135,7 @@ class _MediaListState extends State<MediaList> {
     var result = await PhotoManager.requestPermissionExtend();
     if (result == PermissionState.limited ||
         result == PermissionState.authorized) {
-      List<AssetEntity> media = await album!.getAssetListPaged(currentPage, 80);
+      List<AssetEntity> media = await album!.getAssetListPaged(page:currentPage,size: 80);
       setState(() {
         empty = media.isEmpty;
         _mediaList.addAll(media);
