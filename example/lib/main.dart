@@ -31,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<File> mediaList = [];
+  List<Media> mediaList = [];
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         children: List.generate(
-            mediaList.length, (index) => Image.file(mediaList[index])),
+            mediaList.length, (index) => Image.memory(mediaList[index].thumbnail)),
       ),
     );
   }
@@ -74,11 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
           return MediaPicker(
             maxSelect: 3,
             onPick: (selectedList) {
-              Future.forEach<AssetEntity>(selectedList, (element) async {
-                final _file = await element.file;
-                setState(() {
-                  mediaList.add(_file);
-                });
+              setState(() {
+                mediaList.addAll(selectedList);
               });
               Navigator.pop(context);
             },
