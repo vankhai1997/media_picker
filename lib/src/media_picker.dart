@@ -12,7 +12,7 @@ class MediaPicker extends StatefulWidget {
     required this.captureCamera,
   });
 
-  final ValueChanged<List<AssetEntity>> onPick;
+  final ValueChanged<List<Media>> onPick;
   final ValueChanged<Media> captureCamera;
   final VoidCallback onCancel;
   final MediaCount mediaCount;
@@ -47,9 +47,7 @@ class _MediaPickerState extends State<MediaPicker> {
     return Material(
       color: Colors.transparent,
       child: _albums == null
-          ? LoadingWidget(
-              decoration: widget.decoration!,
-            )
+          ? CupertinoActivityIndicator()
           : _albums!.isEmpty
               ? NoMedia()
               : Column(
