@@ -94,7 +94,7 @@ class _MediaTileState extends State<MediaTile>
           Align(
             alignment: Alignment.topRight,
             child: Padding(
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(6),
               child: Container(
                   decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.2),
@@ -107,8 +107,7 @@ class _MediaTileState extends State<MediaTile>
                         : CrossFadeState.showFirst,
                     secondChild: AnimatedContainer(
                       alignment: Alignment.center,
-                      child: media == null ||
-                              (widget.selectedMedias.indexOf(media!) == -1)
+                      child: media == null || (selected ?? false)
                           ? const SizedBox()
                           : Text(
                               '${widget.selectedMedias.indexOf(media!) + 1}',
@@ -117,13 +116,13 @@ class _MediaTileState extends State<MediaTile>
                       decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,
                           shape: BoxShape.circle),
-                      height: (selected ?? false) ? 24 : 0,
-                      width: (selected ?? false) ? 24 : 0,
+                      height: (selected ?? false) ? 20 : 0,
+                      width: (selected ?? false) ? 20 : 0,
                       duration: const Duration(milliseconds: 250),
                     ),
                     firstChild: SizedBox(
-                      height: 24,
-                      width: 24,
+                      height: 20,
+                      width: 20,
                     ),
                   )),
             ),
