@@ -33,7 +33,7 @@ class _MediaListState extends State<MediaList> {
   int? lastPage;
   bool empty = false;
   AssetPathEntity? album;
-  List<AssetEntity> selectedMedias = [];
+  List<Media> selectedMedias = [];
 
   @override
   void initState() {
@@ -59,7 +59,6 @@ class _MediaListState extends State<MediaList> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      addAutomaticKeepAlives: false,
       physics: BouncingScrollPhysics(),
       controller: widget.scrollController,
       itemCount: _mediaList.length + 1,
@@ -106,7 +105,9 @@ class _MediaListState extends State<MediaList> {
           media: _mediaList[index],
           onSelected: (isSelected, media) {
             if (isSelected) {
-              setState(() => selectedMedias.add(media));
+              setState(() {
+                selectedMedias.add(media);
+              });
             } else
               setState(() => selectedMedias
                   .removeWhere((_media) => _media.id == media.id));
@@ -114,6 +115,7 @@ class _MediaListState extends State<MediaList> {
           },
           isSelected: isPreviouslySelected(_mediaList[index]),
           decoration: widget.decoration,
+          selectedMedias: selectedMedias,
         );
       },
     );
@@ -135,7 +137,8 @@ class _MediaListState extends State<MediaList> {
     var result = await PhotoManager.requestPermissionExtend();
     if (result == PermissionState.limited ||
         result == PermissionState.authorized) {
-      List<AssetEntity> media = await album!.getAssetListPaged(page:currentPage,size: 80);
+      List<AssetEntity> media =
+          await album!.getAssetListPaged(page: currentPage, size: 80);
       setState(() {
         empty = media.isEmpty;
         _mediaList.addAll(media);

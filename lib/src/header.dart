@@ -22,7 +22,7 @@ class Header extends StatefulWidget {
   final AssetPathEntity selectedAlbum;
   final VoidCallback onBack;
   final PanelController albumController;
-  final ValueChanged<List<AssetEntity>> onDone;
+  final ValueChanged<List<Media>> onDone;
   final HeaderController controller;
   final MediaCount? mediaCount;
   final PickerDecoration? decoration;
@@ -32,7 +32,7 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> with TickerProviderStateMixin {
-  List<AssetEntity> selectedMedia = [];
+  List<Media> selectedMedia = [];
 
   var _arrowAnimation;
   AnimationController? _arrowAnimController;
