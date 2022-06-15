@@ -107,7 +107,7 @@ class _MediaTileState extends State<MediaTile>
                         : CrossFadeState.showFirst,
                     secondChild: AnimatedContainer(
                       alignment: Alignment.center,
-                      child: media == null || (selected ?? false)
+                      child: media == null || !(selected ?? false)
                           ? const SizedBox()
                           : Text(
                               '${widget.selectedMedias.indexOf(media!) + 1}',
@@ -116,8 +116,8 @@ class _MediaTileState extends State<MediaTile>
                       decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,
                           shape: BoxShape.circle),
-                      height: (selected ?? false) ? 20 : 0,
-                      width: (selected ?? false) ? 20 : 0,
+                      height: (selected ?? false) ? 20 : 20,
+                      width: (selected ?? false) ? 20 : 20,
                       duration: const Duration(milliseconds: 250),
                     ),
                     firstChild: SizedBox(
