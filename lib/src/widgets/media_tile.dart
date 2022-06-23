@@ -63,7 +63,7 @@ class _MediaTileState extends State<MediaTile>
               if ((widget.totalSelect ?? 0) >= (widget.maxSelect ?? 1000000) &&
                   !selected!) return;
               setState(() => selected = !selected!);
-              widget.onSelected(selected!, media!);
+              widget.onSelected(selected!, media!..index=widget.selectedMedias.indexOf(media!));
             },
             child: Stack(
               children: [

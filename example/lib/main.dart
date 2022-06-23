@@ -76,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPick: (selectedList) {
               setState(() {
                 mediaList.addAll(selectedList);
+                print('=================$mediaList');
               });
               Navigator.pop(context);
             },
