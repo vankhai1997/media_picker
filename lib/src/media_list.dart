@@ -106,7 +106,7 @@ class _MediaListState extends State<MediaList> {
           onSelected: (isSelected, media) {
             if (isSelected) {
               setState(() {
-                selectedMedias.add(media);
+                selectedMedias.add(media..index=selectedMedias.length);
               });
             } else
               setState(() => selectedMedias

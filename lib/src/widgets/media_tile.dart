@@ -63,7 +63,7 @@ class _MediaTileState extends State<MediaTile>
               if ((widget.totalSelect ?? 0) >= (widget.maxSelect ?? 1000000) &&
                   !selected!) return;
               setState(() => selected = !selected!);
-              widget.onSelected(selected!, media!..index=widget.selectedMedias.indexOf(media!));
+              widget.onSelected(selected!, media!);
             },
             child: Stack(
               children: [
@@ -110,7 +110,7 @@ class _MediaTileState extends State<MediaTile>
                       child: media == null || !(selected ?? false)
                           ? const SizedBox()
                           : Text(
-                              '${widget.selectedMedias.indexOf(media!) + 1}',
+                              '${(media!.index ?? 0) + 1}',
                               style: TextStyle(color: Colors.white),
                             ),
                       decoration: BoxDecoration(
