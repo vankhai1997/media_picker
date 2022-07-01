@@ -107,15 +107,17 @@ class _MediaListState extends State<MediaList> {
             if (isSelected) {
               setState(() {
                 selectedMedias.add(media);
+                widget.headerController.updateSelection!(selectedMedias);
               });
-            } else
+            } else {
               setState(() {
                 selectedMedias.removeWhere((_media) => _media.id == media.id);
                 widget.headerController.updateSelection!(selectedMedias);
               });
+            }
             if (selectedMedias.isEmpty) return;
             for (int i = 0; i < selectedMedias.length; i++) {
-              selectedMedias[index].index = i;
+              selectedMedias[i].index = i;
             }
           },
           isSelected: isPreviouslySelected(_mediaList[index]),

@@ -95,36 +95,46 @@ class _MediaTileState extends State<MediaTile>
             alignment: Alignment.topRight,
             child: Padding(
               padding: const EdgeInsets.all(6),
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      border: Border.all(color: Colors.white, width: 2),
-                      shape: BoxShape.circle),
-                  child: AnimatedCrossFade(
-                    duration: const Duration(milliseconds: 250),
-                    crossFadeState: (selected ?? false)
-                        ? CrossFadeState.showSecond
-                        : CrossFadeState.showFirst,
-                    secondChild: AnimatedContainer(
-                      alignment: Alignment.center,
-                      child: media == null || !(selected ?? false)
-                          ? const SizedBox()
-                          : Text(
-                              '${widget.selectedMedias.indexOf(media!) + 1}',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          shape: BoxShape.circle),
-                      height: (selected ?? false) ? 20 : 20,
-                      width: (selected ?? false) ? 20 : 20,
+              child: InkWell(
+                onTap: () {
+                  if (media == null) return;
+                  if ((widget.totalSelect ?? 0) >=
+                          (widget.maxSelect ?? 1000000) &&
+                      !selected!) return;
+                  setState(() => selected = !selected!);
+                  widget.onSelected(selected!, media!);
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.2),
+                        border: Border.all(color: Colors.white, width: 2),
+                        shape: BoxShape.circle),
+                    child: AnimatedCrossFade(
                       duration: const Duration(milliseconds: 250),
-                    ),
-                    firstChild: SizedBox(
-                      height: 20,
-                      width: 20,
-                    ),
-                  )),
+                      crossFadeState: (selected ?? false)
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                      secondChild: AnimatedContainer(
+                        alignment: Alignment.center,
+                        child: media == null || !(selected ?? false)
+                            ? const SizedBox()
+                            : Text(
+                                '${widget.selectedMedias.indexOf(media!) + 1}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            shape: BoxShape.circle),
+                        height: (selected ?? false) ? 20 : 20,
+                        width: (selected ?? false) ? 20 : 20,
+                        duration: const Duration(milliseconds: 250),
+                      ),
+                      firstChild: SizedBox(
+                        height: 20,
+                        width: 20,
+                      ),
+                    )),
+              ),
             ),
           ),
         ],
