@@ -110,7 +110,7 @@ class _MediaTileState extends State<MediaTile>
                       child: media == null || !(selected ?? false)
                           ? const SizedBox()
                           : Text(
-                              '${(media!.index ?? 0) + 1}',
+                              '${widget.selectedMedias.indexOf(media!) + 1}',
                               style: TextStyle(color: Colors.white),
                             ),
                       decoration: BoxDecoration(

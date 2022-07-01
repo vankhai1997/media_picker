@@ -5,6 +5,7 @@ import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
