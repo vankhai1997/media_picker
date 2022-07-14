@@ -149,7 +149,7 @@ class _MediaTileState extends State<MediaTile>
 Future<Media> convertToMedia({required AssetEntity media}) async {
   Media convertedMedia = Media();
   convertedMedia.thumbnail = (await media
-      .thumbnailDataWithSize(ThumbnailSize(960, 1280), quality: 45));
+      .thumbnailDataWithSize(ThumbnailSize(960, 1280), quality: 40));
   convertedMedia.path = (await media.file)!.path;
   convertedMedia.id = media.id;
   convertedMedia.size = media.size;
