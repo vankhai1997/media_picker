@@ -59,7 +59,6 @@ class _MediaListState extends State<MediaList> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      cacheExtent: 1000,
       physics: BouncingScrollPhysics(),
       controller: widget.scrollController,
       itemCount: _mediaList.length + 1,
