@@ -7,6 +7,7 @@ class Media {
   Uint8List? mediaByte;
   Size? size;
   int? length;
+  int? duration;
   int? index;
   DateTime? creationTime;
   String? title;
@@ -19,6 +20,7 @@ class Media {
     this.thumbnail,
     this.mediaByte,
     this.length,
+    this.duration,
     this.md5,
     this.size,
     this.index,

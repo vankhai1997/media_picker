@@ -75,7 +75,7 @@ class _MediaTileState extends State<MediaTile>
                         child: Image.memory(
                         media!.thumbnail!,
                         fit: BoxFit.cover,
-                        cacheWidth: 200,
+                        cacheWidth: 300,
                       )),
                 if (widget.media.type == AssetType.video)
                   Align(
@@ -153,6 +153,7 @@ Future<Media> convertToMedia({required AssetEntity media}) async {
   convertedMedia.path = (await media.file)!.path;
   convertedMedia.id = media.id;
   convertedMedia.size = media.size;
+  convertedMedia.duration = media.duration;
   convertedMedia.title = media.title;
   convertedMedia.creationTime = media.createDateTime;
   String? mediaType;
