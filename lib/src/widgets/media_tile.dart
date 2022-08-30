@@ -75,7 +75,7 @@ class _MediaTileState extends State<MediaTile>
                         child: Image.memory(
                         media!.thumbnail!,
                         fit: BoxFit.cover,
-                        cacheWidth: 200,
+                        cacheWidth: 300,
                       )),
                 if (widget.media.type == AssetType.video)
                   Align(
