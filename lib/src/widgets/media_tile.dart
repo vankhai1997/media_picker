@@ -153,6 +153,7 @@ Future<Media> convertToMedia({required AssetEntity media}) async {
   convertedMedia.path = (await media.file)!.path;
   convertedMedia.id = media.id;
   convertedMedia.size = media.size;
+  convertedMedia.duration = media.duration;
   convertedMedia.title = media.title;
   convertedMedia.creationTime = media.createDateTime;
   String? mediaType;
