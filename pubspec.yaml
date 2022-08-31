@@ -11,11 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  photo_manager: ^2.2.0
+  photo_manager: ^2.2.1
   sliding_up_panel: ^2.0.0+1
   image_picker: ^0.8.3+2
   flutter_svg: ^1.0.3
   camera: ^0.9.8+1
+  rxdart:
 dev_dependencies:
   flutter_test:
     sdk: flutter

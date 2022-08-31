@@ -7,6 +7,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../media_picker_widget.dart';
 import 'header_controller.dart';
+import 'state_behavior.dart';
 
 class Header extends StatefulWidget {
   Header({

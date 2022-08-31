@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../media_picker_widget.dart';
 import 'header_controller.dart';
+import 'state_behavior.dart';
 import 'widgets/media_tile.dart';
 
 class MediaList extends StatefulWidget {
@@ -61,6 +62,7 @@ class _MediaListState extends State<MediaList> {
     return GridView.builder(
       physics: BouncingScrollPhysics(),
       controller: widget.scrollController,
+      addAutomaticKeepAlives: false,
       itemCount: _mediaList.length + 1,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           mainAxisSpacing: 2,
@@ -105,20 +107,12 @@ class _MediaListState extends State<MediaList> {
           media: _mediaList[index],
           onSelected: (isSelected, media) {
             if (isSelected) {
-              setState(() {
-                selectedMedias.add(media);
-                widget.headerController.updateSelection!(selectedMedias);
-              });
+              selectedMedias.add(media);
             } else {
-              setState(() {
-                selectedMedias.removeWhere((_media) => _media.id == media.id);
-                widget.headerController.updateSelection!(selectedMedias);
-              });
+              selectedMedias.removeWhere((_media) => _media.id == media.id);
             }
-            if (selectedMedias.isEmpty) return;
-            for (int i = 0; i < selectedMedias.length; i++) {
-              selectedMedias[i].index = i;
-            }
+            widget.headerController.updateSelection!(selectedMedias);
+            StateBehavior.reloadState(selectedMedias);
           },
           isSelected: isPreviouslySelected(_mediaList[index]),
           decoration: widget.decoration,

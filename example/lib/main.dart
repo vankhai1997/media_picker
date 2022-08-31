@@ -77,7 +77,6 @@ class _MyHomePageState extends State<MyHomePage> {
             onPick: (selectedList) {
               setState(() {
                 mediaList.addAll(selectedList);
-                print('=================$mediaList');
               });
               Navigator.pop(context);
             },
@@ -85,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mediaCount: MediaCount.multiple,
             mediaType: MediaType.all,
             decoration: PickerDecoration(
-              columnCount: 3,
+              columnCount: 4,
               actionBarPosition: ActionBarPosition.top,
               blurStrength: 2,
               completeText: 'Next',

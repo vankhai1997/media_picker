@@ -43,6 +43,12 @@ class _MediaPickerState extends State<MediaPicker> {
   }
 
   @override
+  void dispose() {
+    StateBehavior.clearState();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
@@ -105,6 +111,7 @@ class _MediaPickerState extends State<MediaPicker> {
         mediaByte: await pickedFile.readAsBytes(),
         title: pickedFile.path,
       );
+      StateBehavior.clearState();
       onCapture(converted);
     }
   }

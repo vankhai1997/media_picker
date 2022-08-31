@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:media_picker_widget/src/state_behavior.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../media_picker_widget.dart';
 import 'loading_widget.dart';
@@ -30,23 +35,32 @@ class MediaTile extends StatefulWidget {
 
 class _MediaTileState extends State<MediaTile>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
-  bool? selected;
-  Media? media;
+  final selectedBehavior = BehaviorSubject<bool>.seeded(false);
+
+  Stream<bool> get selectedStream => selectedBehavior.stream;
 
   @override
   void initState() {
-    selected = widget.isSelected;
-    _initFile();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      StateBehavior.listenState((selected) {
+        if (selectedBehavior.isClosed) return;
+        selectedBehavior.add(selected.indexWhere((e) => e.id==widget.media.id,)!=-1);
+      });
+      selectedBehavior.add(widget.isSelected);
+    });
+    // _initFile();
     super.initState();
   }
 
-  Future<void> _initFile() async {
-    final res = await convertToMedia(media: widget.media);
-    if (mounted) {
-      setState(() {
-        media = res;
-      });
-    }
+  Future<Uint8List?> _getAssetThumbnail(AssetEntity asset) async {
+    return await asset.thumbnailDataWithSize(ThumbnailSize(250, 250),
+        quality: 80);
+  }
+
+  @override
+  void dispose() {
+    selectedBehavior.close();
+    super.dispose();
   }
 
   @override
@@ -59,24 +73,25 @@ class _MediaTileState extends State<MediaTile>
           Positioned.fill(
               child: InkWell(
             onTap: () {
-              if (media == null) return;
-              if ((widget.totalSelect ?? 0) >= (widget.maxSelect ?? 1000000) &&
-                  !selected!) return;
-              setState(() => selected = !selected!);
-              widget.onSelected(selected!, media!);
+              onTapItem();
             },
             child: Stack(
               children: [
-                media == null
-                    ? LoadingWidget(
+                FutureBuilder<Uint8List?>(
+                    future: _getAssetThumbnail(widget.media),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Positioned.fill(
+                          child: Image.memory(
+                            snapshot.data!,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      }
+                      return LoadingWidget(
                         decoration: widget.decoration,
-                      )
-                    : Positioned.fill(
-                        child: Image.memory(
-                        media!.thumbnail!,
-                        fit: BoxFit.cover,
-                        cacheWidth: 300,
-                      )),
+                      );
+                    }),
                 if (widget.media.type == AssetType.video)
                   Align(
                     alignment: Alignment.bottomRight,
@@ -97,49 +112,65 @@ class _MediaTileState extends State<MediaTile>
               padding: const EdgeInsets.all(6),
               child: InkWell(
                 onTap: () {
-                  if (media == null) return;
-                  if ((widget.totalSelect ?? 0) >=
-                          (widget.maxSelect ?? 1000000) &&
-                      !selected!) return;
-                  setState(() => selected = !selected!);
-                  widget.onSelected(selected!, media!);
+                  onTapItem();
                 },
                 child: Container(
                     decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.2),
                         border: Border.all(color: Colors.white, width: 2),
                         shape: BoxShape.circle),
-                    child: AnimatedCrossFade(
-                      duration: const Duration(milliseconds: 250),
-                      crossFadeState: (selected ?? false)
-                          ? CrossFadeState.showSecond
-                          : CrossFadeState.showFirst,
-                      secondChild: AnimatedContainer(
-                        alignment: Alignment.center,
-                        child: media == null || !(selected ?? false)
-                            ? const SizedBox()
-                            : Text(
-                                '${widget.selectedMedias.indexOf(media!) + 1}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            shape: BoxShape.circle),
-                        height: (selected ?? false) ? 20 : 20,
-                        width: (selected ?? false) ? 20 : 20,
-                        duration: const Duration(milliseconds: 250),
-                      ),
-                      firstChild: SizedBox(
-                        height: 20,
-                        width: 20,
-                      ),
-                    )),
+                    child: StreamBuilder<bool>(
+                        stream: selectedStream,
+                        builder: (context, snapshot) {
+                          return AnimatedCrossFade(
+                            duration: const Duration(milliseconds: 250),
+                            crossFadeState: (snapshot.data ?? false)
+                                ? CrossFadeState.showSecond
+                                : CrossFadeState.showFirst,
+                            secondChild: AnimatedContainer(
+                              alignment: Alignment.center,
+                              child: !(snapshot.data ?? false)
+                                  ? const SizedBox()
+                                  : Text(
+                                      '$indexSelected',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  shape: BoxShape.circle),
+                              height: (snapshot.data ?? false) ? 20 : 20,
+                              width: (snapshot.data ?? false) ? 20 : 20,
+                              duration: const Duration(milliseconds: 250),
+                            ),
+                            firstChild: SizedBox(
+                              height: 20,
+                              width: 20,
+                            ),
+                          );
+                        })),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> onTapItem() async {
+    if ((widget.selectedMedias.length) >= (widget.maxSelect ?? 1000000) &&
+        !selectedBehavior.value) return;
+    final res = await convertToMedia(media: widget.media);
+    if ((widget.selectedMedias.length) >= (widget.maxSelect ?? 1000000) &&
+        !selectedBehavior.value) return;
+    widget.onSelected(!selectedBehavior.value, res);
+  }
+
+  int get indexSelected {
+    return widget.selectedMedias
+            .map((e) => e.id)
+            .toList()
+            .indexOf(widget.media.id) +
+        1;
   }
 
   @override
