@@ -58,7 +58,7 @@ class _MediaListState extends State<MediaList> {
         if (tempId.contains(_media.id)) {
           _selectedMedias.add(_media);
         }
-        StateBehavior.removeTempleSelected(first);
+        StateBehavior.removeTempleSelectedById(_media.id ?? "");
       }
     });
   }

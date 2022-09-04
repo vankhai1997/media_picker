@@ -32,6 +32,11 @@ class StateBehavior {
     _templesSelectedBehavior.add(templesSelected);
   }
 
+  static void removeTempleSelectedById(String id) {
+    templesSelected.removeWhere((e) => e.id == id);
+    _templesSelectedBehavior.add(templesSelected);
+  }
+
   static void updateAssetEntitiesSelected(AssetEntity selectedMedia) {
     if (assetEntitiesSelected.contains(selectedMedia)) {
       removeTempleSelected(selectedMedia);
