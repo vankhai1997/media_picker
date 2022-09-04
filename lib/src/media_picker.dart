@@ -44,7 +44,7 @@ class _MediaPickerState extends State<MediaPicker> {
 
   @override
   void dispose() {
-    StateBehavior.clearState();
+    StateBehavior.clearAssetEntitiesSelected();
     super.dispose();
   }
 
@@ -59,38 +59,20 @@ class _MediaPickerState extends State<MediaPicker> {
               : Column(
                   children: [
                     if (decoration!.actionBarPosition == ActionBarPosition.top)
-                      _buildHeader(),
-                    _buildWarning(),
+                      _buildWarning(),
                     Expanded(
-                        child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: MediaList(
-                            maxSelected: widget.maxSelect,
-                            album: selectedAlbum!,
-                            headerController: headerController,
-                            mediaCount: widget.mediaCount,
-                            decoration: widget.decoration,
-                            scrollController: widget.scrollController,
-                            onTapCamera: () {
-                              _openCamera(onCapture: widget.captureCamera);
-                            },
-                          ),
-                        ),
-                        AlbumSelector(
-                          panelController: albumController,
-                          albums: _albums!,
-                          decoration: widget.decoration!,
-                          onSelect: (album) {
-                            headerController.closeAlbumDrawer!();
-                            setState(() => selectedAlbum = album);
-                          },
-                        ),
-                      ],
-                    )),
-                    if (decoration!.actionBarPosition ==
-                        ActionBarPosition.bottom)
-                      _buildHeader(),
+                      child: MediaList(
+                        maxSelected: widget.maxSelect,
+                        album: selectedAlbum!,
+                        mediaCount: widget.mediaCount,
+                        decoration: widget.decoration,
+                        scrollController: widget.scrollController,
+                        onTapCamera: () {
+                          _openCamera(onCapture: widget.captureCamera);
+                        },
+                        onPick: widget.onPick,
+                      ),
+                    ),
                   ],
                 ),
     );
@@ -111,7 +93,7 @@ class _MediaPickerState extends State<MediaPicker> {
         mediaByte: await pickedFile.readAsBytes(),
         title: pickedFile.path,
       );
-      StateBehavior.clearState();
+      StateBehavior.clearAssetEntitiesSelected();
       onCapture(converted);
     }
   }
@@ -124,8 +106,7 @@ class _MediaPickerState extends State<MediaPicker> {
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: RichText(
             text: new TextSpan(
-                text:
-                    'Bạn vừa cấp quyền cho Meey Team chọn một vài ảnh nhất định.',
+                text: decoration?.warningText,
                 style: TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.w400,
@@ -148,7 +129,7 @@ class _MediaPickerState extends State<MediaPicker> {
   Widget _buildHeader() {
     return Header(
       onBack: handleBackPress,
-      onDone: widget.onPick,
+      onDone: () {},
       albumController: albumController,
       selectedAlbum: selectedAlbum!,
       controller: headerController,

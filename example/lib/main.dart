@@ -59,21 +59,18 @@ class _MyHomePageState extends State<MyHomePage> {
       child: ListView(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-        children: List.generate(
-            mediaList.length, (index) => Image.memory(mediaList[index].thumbnail)),
+        children: List.generate(mediaList.length,
+            (index) => Image.memory(mediaList[index].thumbnail)),
       ),
     );
   }
 
   void openImagePicker(BuildContext context) {
-    // openCamera(onCapture: (image){
-    //   setState(()=> mediaList = [image]);
-    // });
     showModalBottomSheet(
         context: context,
         builder: (context) {
           return MediaPicker(
-            maxSelect: 3,
+            maxSelect: 100,
             onPick: (selectedList) {
               setState(() {
                 mediaList.addAll(selectedList);
@@ -87,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
               columnCount: 4,
               actionBarPosition: ActionBarPosition.top,
               blurStrength: 2,
-              completeText: 'Next',
+              completeText: 'Next', warningText: '',
             ),
             captureCamera: (Media value) {},
           );

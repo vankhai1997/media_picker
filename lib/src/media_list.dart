@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animator/flutter_animator.dart';
+import 'package:media_picker_widget/src/utils.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../media_picker_widget.dart';
 import 'header_controller.dart';
@@ -8,20 +10,20 @@ import 'widgets/media_tile.dart';
 class MediaList extends StatefulWidget {
   MediaList({
     required this.album,
-    required this.headerController,
     this.mediaCount,
     this.decoration,
     this.maxSelected,
     this.scrollController,
     required this.onTapCamera,
+    required this.onPick,
   });
 
   final AssetPathEntity album;
-  final HeaderController headerController;
   final MediaCount? mediaCount;
   final PickerDecoration? decoration;
   final ScrollController? scrollController;
   final Function() onTapCamera;
+  final Function(List<Media> medias) onPick;
   final int? maxSelected;
 
   @override
@@ -34,13 +36,31 @@ class _MediaListState extends State<MediaList> {
   int? lastPage;
   bool empty = false;
   AssetPathEntity? album;
-  List<Media> selectedMedias = [];
+  List<Media> _selectedMedias = [];
 
   @override
   void initState() {
     album = widget.album;
     _fetchNewMedia();
+    _handleSinkDataSelected();
     super.initState();
+  }
+
+  void _handleSinkDataSelected() {
+    StateBehavior.onChangeAssetEntitiesSelected((medias) async {
+      final tempId = StateBehavior.templesSelected.map((e) => e.id).toList();
+      final selectedId =
+          StateBehavior.assetEntitiesSelected.map((e) => e.id).toList();
+      _selectedMedias.removeWhere((e) => !selectedId.contains(e.id));
+      while (StateBehavior.templesSelected.isNotEmpty) {
+        final first = StateBehavior.templesSelected.first;
+        final _media = await Utils.convertToMedia(media: first);
+        if (tempId.contains(_media.id)) {
+          _selectedMedias.add(_media);
+        }
+        StateBehavior.removeTempleSelected(first);
+      }
+    });
   }
 
   @override
@@ -59,66 +79,67 @@ class _MediaListState extends State<MediaList> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: BouncingScrollPhysics(),
-      controller: widget.scrollController,
-      addAutomaticKeepAlives: false,
-      itemCount: _mediaList.length + 1,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisSpacing: 2,
-          crossAxisSpacing: 2,
-          crossAxisCount: widget.decoration!.columnCount),
-      itemBuilder: (BuildContext context, int i) {
-        if (i == 0) {
-          return InkWell(
-            onTap: widget.onTapCamera,
-            child: Stack(
-              alignment: Alignment.center,
-              fit: StackFit.expand,
-              children: [
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.camera_alt,
-                        size: 36,
-                        color: Colors.black.withOpacity(0.5),
+    return Stack(
+      children: [
+        GridView.builder(
+          controller: widget.scrollController,
+          addAutomaticKeepAlives: false,
+          itemCount: _mediaList.length + 1,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: 2,
+              crossAxisSpacing: 2,
+              crossAxisCount: widget.decoration!.columnCount),
+          itemBuilder: (BuildContext context, int i) {
+            if (i == 0) {
+              return InkWell(
+                onTap: widget.onTapCamera,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.expand,
+                  children: [
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.camera_alt,
+                            size: 36,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                          Text(
+                            'Chụp ảnh',
+                            style: TextStyle(
+                                color: Colors.black.withOpacity(0.5),
+                                fontSize: 16),
+                          )
+                        ],
                       ),
-                      Text(
-                        'Chụp ảnh',
-                        style: TextStyle(
-                            color: Colors.black.withOpacity(0.5), fontSize: 16),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        }
-        final index = i - 1;
-        if (index == _mediaList.length - 20 && !empty) {
-          _fetchNewMedia();
-        }
-        return MediaTile(
-          totalSelect: selectedMedias.length,
-          maxSelect: widget.maxSelected,
-          media: _mediaList[index],
-          onSelected: (isSelected, media) {
-            if (isSelected) {
-              selectedMedias.add(media);
-            } else {
-              selectedMedias.removeWhere((_media) => _media.id == media.id);
+                    )
+                  ],
+                ),
+              );
             }
-            widget.headerController.updateSelection!(selectedMedias);
-            StateBehavior.reloadState(selectedMedias);
+            final index = i - 1;
+            if (index == _mediaList.length - 20 && !empty) {
+              _fetchNewMedia();
+            }
+            return MediaTile(
+              maxSelect: widget.maxSelected,
+              assetEntity: _mediaList[index],
+              decoration: widget.decoration,
+            );
           },
-          isSelected: isPreviouslySelected(_mediaList[index]),
-          decoration: widget.decoration,
-          selectedMedias: selectedMedias,
-        );
-      },
+        ),
+        Positioned(
+            bottom: 16 + MediaQuery.of(context).padding.bottom,
+            left: 32,
+            right: 32,
+            child: _ButtonSendImage(
+              onPick: () {
+                widget.onPick(_selectedMedias);
+              },
+            ))
+      ],
     );
   }
 
@@ -149,12 +170,51 @@ class _MediaListState extends State<MediaList> {
       PhotoManager.openSetting();
     }
   }
+}
 
-  bool isPreviouslySelected(AssetEntity media) {
-    bool isSelected = false;
-    for (var asset in selectedMedias) {
-      if (asset.id == media.id) isSelected = true;
-    }
-    return isSelected;
+class _ButtonSendImage extends StatelessWidget {
+  final Function() onPick;
+
+  const _ButtonSendImage({Key? key, required this.onPick}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<AssetEntity>>(
+        stream: StateBehavior.templesSelectedStream,
+        builder: (context, snapshot) {
+          final data = snapshot.data ?? [];
+          final selected = StateBehavior.assetEntitiesSelected.length;
+          if (selected == 0) return const SizedBox();
+          return SlideInUp(
+            child: TextButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6))),
+              ),
+              onPressed: () {
+                if (data.isNotEmpty) return;
+                onPick();
+              },
+              child: Builder(
+                builder: (BuildContext context) {
+                  if (data.isEmpty) {
+                    return Text(
+                      'Gửi $selected',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400),
+                    );
+                  }
+                  return CircularProgressIndicator.adaptive(
+                    backgroundColor: Colors.white,
+                  );
+                },
+              ),
+            ),
+          );
+        });
   }
 }
