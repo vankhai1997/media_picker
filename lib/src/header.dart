@@ -1,7 +1,5 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:media_picker_widget/src/widgets/media_tile.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -23,7 +21,7 @@ class Header extends StatefulWidget {
   final AssetPathEntity selectedAlbum;
   final VoidCallback onBack;
   final PanelController albumController;
-  final ValueChanged<List<Media>> onDone;
+  final Function() onDone;
   final HeaderController controller;
   final MediaCount? mediaCount;
   final PickerDecoration? decoration;
@@ -33,7 +31,6 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> with TickerProviderStateMixin {
-  List<Media> selectedMedia = [];
 
   var _arrowAnimation;
   AnimationController? _arrowAnimController;
@@ -44,12 +41,6 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     _arrowAnimation =
         Tween<double>(begin: 0, end: 1).animate(_arrowAnimController!);
-
-    widget.controller.updateSelection = (selectedMediaList) {
-      if (widget.mediaCount == MediaCount.multiple)
-        setState(() => selectedMedia = selectedMediaList);
-      // else if (selectedMediaList.length == 1) widget.onDone(selectedMediaList);
-    };
 
     widget.controller.closeAlbumDrawer = () {
       widget.albumController.close();
@@ -76,65 +67,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                     widget.onBack();
                   }),
             ),
-            Expanded(
-              child: TextButton(
-                style: ButtonStyle(
-                  overlayColor:
-                      MaterialStateProperty.all(Colors.grey.withOpacity(0.05)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    AnimatedSwitcher(
-                      duration: Duration(milliseconds: 200),
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return SlideTransition(
-                          child: child,
-                          position: Tween<Offset>(
-                                  begin: Offset(0.0, -0.5),
-                                  end: Offset(0.0, 0.0))
-                              .animate(animation),
-                        );
-                      },
-                      child: Text(
-                        widget.selectedAlbum.name,
-                        style: widget.decoration!.albumTitleStyle,
-                        key: ValueKey<String>(widget.selectedAlbum.id),
-                      ),
-                    ),
-                    AnimatedBuilder(
-                      animation: _arrowAnimation,
-                      builder: (context, child) => Transform.rotate(
-                        angle: _arrowAnimation.value * pi,
-                        child: Icon(
-                          Icons.keyboard_arrow_up_outlined,
-                          size: (widget
-                                      .decoration!.albumTitleStyle?.fontSize) !=
-                                  null
-                              ? widget.decoration!.albumTitleStyle!.fontSize! *
-                                  1.5
-                              : 20,
-                          color: widget.decoration!.albumTitleStyle?.color ??
-                              Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                onPressed: () {
-                  if (widget.albumController.isPanelOpen) {
-                    widget.albumController.close();
-                    _arrowAnimController!.reverse();
-                  }
-                  if (widget.albumController.isPanelClosed) {
-                    widget.albumController.open();
-                    _arrowAnimController!.forward();
-                  }
-                },
-              ),
-            ),
+            const Spacer(),
             if (widget.mediaCount == MediaCount.multiple)
               AnimatedSwitcher(
                 duration: Duration(milliseconds: 100),
@@ -146,8 +79,17 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                         .animate(animation),
                   );
                 },
-                child: (selectedMedia.isNotEmpty)
-                    ? TextButton(
+                child: StreamBuilder<List<AssetEntity>>(
+                    stream: StateBehavior.templesSelectedStream,
+                    builder: (context, snapshot) {
+                      if (StateBehavior.assetEntitiesSelected.isEmpty)
+                        return const SizedBox(
+                          width: 24,
+                        );
+                      if ((snapshot.data ?? []).isEmpty)
+                        return CircularProgressIndicator.adaptive();
+
+                      return TextButton(
                         key: Key('button'),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -162,7 +104,7 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                                       fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              ' (${selectedMedia.length})',
+                              ' (${(snapshot.data??[]).length})',
                               style: TextStyle(
                                 color: widget
                                         .decoration!.completeTextStyle?.color ??
@@ -179,9 +121,9 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        onPressed: selectedMedia.isNotEmpty
+                        onPressed: (snapshot.data??[]).isNotEmpty
                             ? () {
-                                widget.onDone(selectedMedia);
+                                widget.onDone.call();
                               }
                             : null,
                         style: widget.decoration!.completeButtonStyle ??
@@ -192,10 +134,8 @@ class _HeaderState extends State<Header> with TickerProviderStateMixin {
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(3))),
                             ),
-                      )
-                    : const SizedBox(
-                        width: 24,
-                      ),
+                      );
+                    }),
               ),
             const SizedBox(
               width: 16,

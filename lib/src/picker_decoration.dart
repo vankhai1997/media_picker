@@ -10,6 +10,7 @@ class PickerDecoration {
   TextStyle? albumTitleStyle;
   TextStyle? albumTextStyle;
   String completeText;
+  String warningText;
   TextStyle? completeTextStyle;
   ButtonStyle? completeButtonStyle;
   Widget? loadingWidget;
@@ -20,6 +21,8 @@ class PickerDecoration {
     this.columnCount = 3,
     this.blurStrength = 2,
     this.albumTitleStyle,
+    this.warningText =
+        'Bạn vừa cấp quyền cho Meey Team chọn một vài ảnh nhất định.',
     this.completeText = 'Continue',
     this.completeTextStyle,
     this.completeButtonStyle,
