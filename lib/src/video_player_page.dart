@@ -3,23 +3,25 @@ import 'dart:io';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 
-class MemoryPlayerPage extends StatefulWidget {
+class VIdeoPlayerPage extends StatefulWidget {
   final File file;
+  final double aspect;
 
-  const MemoryPlayerPage({Key? key, required this.file}) : super(key: key);
+  const VIdeoPlayerPage({Key? key, required this.file, required this.aspect})
+      : super(key: key);
 
   @override
-  _MemoryPlayerPageState createState() => _MemoryPlayerPageState();
+  _VIdeoPlayerPageState createState() => _VIdeoPlayerPageState();
 }
 
-class _MemoryPlayerPageState extends State<MemoryPlayerPage> {
+class _VIdeoPlayerPageState extends State<VIdeoPlayerPage> {
   late BetterPlayerController _betterPlayerController;
 
   @override
   void initState() {
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
-      aspectRatio: 16 / 9,
+      aspectRatio: widget.aspect,
       fit: BoxFit.contain,
     );
 
@@ -37,7 +39,7 @@ class _MemoryPlayerPageState extends State<MemoryPlayerPage> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 16 / 9,
+      aspectRatio: widget.aspect,
       child: BetterPlayer(controller: _betterPlayerController),
     );
   }

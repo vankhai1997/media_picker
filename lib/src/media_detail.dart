@@ -6,7 +6,7 @@ import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:media_picker_widget/src/utils.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import 'memory_player_page.dart';
+import 'video_player_page.dart';
 
 class MediaDetail extends StatefulWidget {
   final AssetEntity assetEntity;
@@ -45,8 +45,9 @@ class _MediaDetailState extends State<MediaDetail> {
               child: Builder(builder: (c) {
                 if (media == null) return const SizedBox();
                 if (media!.mediaType == 'video') {
-                  return MemoryPlayerPage(
+                  return VIdeoPlayerPage(
                     file: File(media!.path ?? ""),
+                    aspect: widget.assetEntity.width / widget.assetEntity.height,
                   );
                 }
                 return Image.file(File(media!.path ?? ""));
