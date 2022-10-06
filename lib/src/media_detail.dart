@@ -45,7 +45,7 @@ class _MediaDetailState extends State<MediaDetail> {
               child: Builder(builder: (c) {
                 if (media == null) return const SizedBox();
                 if (media!.mediaType == 'video') {
-                  return VIdeoPlayerPage(
+                  return VideoPlayerPage(
                     file: File(media!.path ?? ""),
                     aspect: widget.assetEntity.width / widget.assetEntity.height,
                   );
