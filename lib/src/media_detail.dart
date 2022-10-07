@@ -27,7 +27,7 @@ class _MediaDetailState extends State<MediaDetail> {
   }
 
   Future<void> _initFile() async {
-    media = await Utils.convertToMedia2(media: widget.assetEntity);
+    media = await MediaPickerUtils.convertToMedia2(media: widget.assetEntity);
     if (mounted) {
       setState(() {});
     }

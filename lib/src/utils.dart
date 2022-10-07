@@ -2,7 +2,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import '../media_picker_widget.dart';
 
-class Utils {
+class MediaPickerUtils {
   static Future<Media> convertToMedia({required AssetEntity media}) async {
     Media convertedMedia = Media();
     convertedMedia.thumbnail = (await media
@@ -29,5 +29,13 @@ class Utils {
     if (media.type == AssetType.image) mediaType = 'image';
     convertedMedia.mediaType = mediaType;
     return convertedMedia;
+  }
+
+  static String intTimeHs(int time) {
+    final duration = Duration(seconds: time);
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    final String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    final String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
   }
 }

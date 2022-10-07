@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:media_picker_widget/src/media_detail.dart';
 import 'package:media_picker_widget/src/state_behavior.dart';
+import 'package:media_picker_widget/src/utils.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -80,13 +81,17 @@ class _MediaTileState extends State<MediaTile>
           if (widget.assetEntity.type == AssetType.video)
             Align(
               alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: EdgeInsets.only(right: 5, bottom: 5),
-                child: Icon(
-                  Icons.videocam,
-                  color: Colors.white,
-                ),
-              ),
+              child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: Colors.black.withOpacity(0.3)),
+                  child: Text(
+                      MediaPickerUtils.intTimeHs(widget.assetEntity.duration),
+                      style: TextStyle(color: Colors.white, fontSize: 10))),
             ),
           Align(
             alignment: Alignment.topRight,

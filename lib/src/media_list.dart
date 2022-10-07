@@ -54,7 +54,7 @@ class _MediaListState extends State<MediaList> {
       _selectedMedias.removeWhere((e) => !selectedId.contains(e.id));
       while (StateBehavior.templesSelected.isNotEmpty) {
         final first = StateBehavior.templesSelected.first;
-        final _media = await Utils.convertToMedia(media: first);
+        final _media = await MediaPickerUtils.convertToMedia(media: first);
         if (tempId.contains(_media.id)) {
           _selectedMedias.add(_media);
         }
