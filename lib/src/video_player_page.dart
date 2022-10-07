@@ -19,11 +19,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   void initState() {
+    const controlsConfiguration = BetterPlayerControlsConfiguration(
+      enableFullscreen: false,
+    );
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
-      aspectRatio: 1/widget.aspect,
-      fit: BoxFit.contain,
-    );
+            aspectRatio: 1 / widget.aspect,
+            fit: BoxFit.contain,
+            allowedScreenSleep: false,
+            autoPlay: true,
+            controlsConfiguration: controlsConfiguration);
 
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _setupDataSource();
