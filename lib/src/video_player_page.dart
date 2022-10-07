@@ -35,8 +35,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   }
 
   void _setupDataSource() async {
-    List<int> bytes = widget.file.readAsBytesSync().buffer.asUint8List();
-    BetterPlayerDataSource dataSource = BetterPlayerDataSource.memory(bytes);
+    BetterPlayerDataSource dataSource =
+        BetterPlayerDataSource.file(widget.file.path);
     _betterPlayerController.setupDataSource(dataSource);
   }
 
