@@ -20,8 +20,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   @override
   void initState() {
     const controlsConfiguration = BetterPlayerControlsConfiguration(
-      enableFullscreen: false,
-    );
+        enableFullscreen: false, playerTheme: BetterPlayerTheme.cupertino);
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
             aspectRatio: 1 / widget.aspect,
