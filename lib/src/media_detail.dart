@@ -7,6 +7,7 @@ import 'package:media_picker_widget/src/utils.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import 'video_player_page.dart';
+import 'widgets/simple_interactive_gallery_viewer.dart';
 
 class MediaDetail extends StatefulWidget {
   final AssetEntity assetEntity;
@@ -41,17 +42,24 @@ class _MediaDetailState extends State<MediaDetail> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            Center(
-              child: Builder(builder: (c) {
-                if (media == null) return const SizedBox();
-                if (media!.mediaType == 'video') {
-                  return VideoPlayerPage(
-                    file: File(media!.path ?? ""),
-                    aspect: widget.assetEntity.width / widget.assetEntity.height,
-                  );
-                }
-                return Image.file(File(media!.path ?? ""));
-              }),
+            SimpleInteractiveViewerGallery(
+              initIndex: 0,
+              sources: [media?.path ?? ""],
+              itemBuilder: (BuildContext context, int index, bool isFocus) {
+                return Center(
+                  child: Builder(builder: (c) {
+                    if (media == null) return const SizedBox();
+                    if (media!.mediaType == 'video') {
+                      return VideoPlayerPage(
+                        file: File(media!.path ?? ""),
+                        aspect: widget.assetEntity.width /
+                            widget.assetEntity.height,
+                      );
+                    }
+                    return Image.file(File(media!.path ?? ""));
+                  }),
+                );
+              },
             ),
             SafeArea(
               child: CupertinoButton(

@@ -10,6 +10,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../media_picker_widget.dart';
+import 'hero_route.dart';
 import 'loading_widget.dart';
 
 class MediaTile extends StatefulWidget {
@@ -61,10 +62,9 @@ class _MediaTileState extends State<MediaTile>
                       onTap: () {
                         Navigator.push(
                           context,
-                          CupertinoDialogRoute(
+                          HeroDialogRoute(
                               builder: (context) =>
-                                  MediaDetail(assetEntity: widget.assetEntity),
-                              context: context),
+                                  MediaDetail(assetEntity: widget.assetEntity)),
                         );
                       },
                       child: Image.memory(
