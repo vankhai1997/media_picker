@@ -131,7 +131,7 @@ class _MediaListState extends State<MediaList> {
           },
         ),
         Positioned(
-            bottom: 16 + MediaQuery.of(context).padding.bottom,
+            bottom: 8 + MediaQuery.of(context).padding.bottom,
             left: 32,
             right: 32,
             child: _ButtonSendImage(

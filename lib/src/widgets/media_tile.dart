@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:media_picker_widget/src/media_detail.dart';
 import 'package:media_picker_widget/src/state_behavior.dart';
 import 'package:media_picker_widget/src/utils.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../media_picker_widget.dart';
 import 'hero_route.dart';
@@ -37,7 +35,7 @@ class _MediaTileState extends State<MediaTile>
   }
 
   Future<Uint8List?> _getAssetThumbnail(AssetEntity asset) async {
-    return await asset.thumbnailDataWithSize(ThumbnailSize(250, 250),
+    return await asset.thumbnailDataWithSize(ThumbnailSize(350, 350),
         quality: 80);
   }
 
