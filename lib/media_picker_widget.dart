@@ -1,6 +1,7 @@
 library media_picker_widget;
 import 'dart:typed_data';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

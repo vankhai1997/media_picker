@@ -1,7 +1,7 @@
 part of media_picker_widget;
 
-class Media {
-  String ? path;
+class Media extends Equatable {
+  String? path;
   String? id;
   Uint8List? thumbnail;
   Uint8List? mediaByte;
@@ -28,4 +28,7 @@ class Media {
     this.title,
     this.mediaType,
   });
+
+  @override
+  List<Object?> get props => [path];
 }

@@ -136,7 +136,7 @@ class _MediaListState extends State<MediaList> {
             right: 32,
             child: _ButtonSendImage(
               onPick: () {
-                widget.onPick(_selectedMedias);
+                widget.onPick(_selectedMedias.toSet().toList());
               },
             ))
       ],

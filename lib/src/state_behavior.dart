@@ -45,7 +45,7 @@ class StateBehavior {
       addTempleSelected(selectedMedia);
       assetEntitiesSelected.add(selectedMedia);
     }
-    _assetEntitiesSelectedBehavior.add(assetEntitiesSelected);
+    _assetEntitiesSelectedBehavior.add(assetEntitiesSelected.toSet().toList());
   }
 
   static void onChangeAssetEntitiesSelected(
