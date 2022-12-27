@@ -192,7 +192,6 @@ class _TweetSourceGalleryState extends State<SimpleInteractiveViewerGallery>
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: Colors.black,
         toolbarHeight: 0,
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),

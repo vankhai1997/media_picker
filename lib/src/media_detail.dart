@@ -39,7 +39,6 @@ class _MediaDetailState extends State<MediaDetail> {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
-        backgroundColor: Colors.black,
         body: Stack(
           children: [
             SimpleInteractiveViewerGallery(
@@ -69,7 +68,6 @@ class _MediaDetailState extends State<MediaDetail> {
                 },
                 child: Icon(
                   Icons.close,
-                  color: Colors.white,
                 ),
               ),
             ),

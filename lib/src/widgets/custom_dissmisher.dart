@@ -71,7 +71,7 @@ class _CustomDismissibleState extends State<CustomDismissible>
 
     _opacityAnimation = DecorationTween(
       begin: const BoxDecoration(
-        color: Color(0xFF000000),
+        color: Color(0x00000000),
       ),
       end: const BoxDecoration(
         color: Color(0x00000000),
