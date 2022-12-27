@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,16 +37,19 @@ class _MediaDetailState extends State<MediaDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle.light,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            SimpleInteractiveViewerGallery(
-              initIndex: 0,
-              sources: [media?.path ?? ""],
-              itemBuilder: (BuildContext context, int index, bool isFocus) {
-                return Center(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark));
+    return Scaffold(
+      body: Stack(
+        children: [
+          SimpleInteractiveViewerGallery(
+            initIndex: 0,
+            sources: [media?.path ?? ""],
+            itemBuilder: (BuildContext context, int index, bool isFocus) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Center(
                   child: Builder(builder: (c) {
                     if (media == null) return const SizedBox();
                     if (media!.mediaType == 'video') {
@@ -57,22 +61,22 @@ class _MediaDetailState extends State<MediaDetail> {
                     }
                     return Image.file(File(media!.path ?? ""));
                   }),
-                );
-              },
-            ),
-            SafeArea(
-              child: CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.close,
                 ),
+              );
+            },
+          ),
+          SafeArea(
+            child: CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.close,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

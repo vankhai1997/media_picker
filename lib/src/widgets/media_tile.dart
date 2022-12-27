@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:media_picker_widget/src/media_detail.dart';
 import 'package:media_picker_widget/src/state_behavior.dart';
 import 'package:media_picker_widget/src/utils.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../media_picker_widget.dart';
-import 'hero_route.dart';
 import 'loading_widget.dart';
 
 class MediaTile extends StatefulWidget {
@@ -58,12 +56,12 @@ class _MediaTileState extends State<MediaTile>
                   if (snapshot.connectionState == ConnectionState.done) {
                     return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          HeroDialogRoute(
-                              builder: (context) =>
-                                  MediaDetail(assetEntity: widget.assetEntity)),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   HeroDialogRoute(
+                        //       builder: (context) =>
+                        //           MediaDetail(assetEntity: widget.assetEntity)),
+                        // );
                       },
                       child: Image.memory(
                         snapshot.data!,
@@ -76,6 +74,22 @@ class _MediaTileState extends State<MediaTile>
                   );
                 }),
           ),
+          StreamBuilder<List<AssetEntity>>(
+              stream: StateBehavior.assetEntitiesSelectedStream,
+              builder: (context, snapshot) {
+                final selected = (snapshot.data ?? [])
+                        .indexWhere((e) => e.id == widget.assetEntity.id) !=
+                    -1;
+                return selected
+                    ? AnimatedOpacity(
+                        opacity: selected ? 1 : 0,
+                        duration: const Duration(milliseconds: 500),
+                        child: Container(
+                          color: Colors.white.withOpacity(0.4),
+                        ),
+                      )
+                    : SizedBox();
+              }),
           if (widget.assetEntity.type == AssetType.video)
             Align(
               alignment: Alignment.bottomRight,
