@@ -66,7 +66,6 @@ class _MediaPickerState extends State<MediaPicker> {
                         album: selectedAlbum!,
                         mediaCount: widget.mediaCount,
                         decoration: widget.decoration,
-                        scrollController: widget.scrollController,
                         onTapCamera: () {
                           _openCamera(onCapture: widget.captureCamera);
                         },

@@ -15,7 +15,7 @@ class NoMedia extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              'No Images Available',
+              'Không có dữ liệu',
               style: TextStyle(fontSize: 20),
             ),
           ],

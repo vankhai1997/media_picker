@@ -7,7 +7,6 @@ import 'package:media_picker_widget/src/utils.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../media_picker_widget.dart';
-import 'loading_widget.dart';
 
 class MediaTile extends StatefulWidget {
   MediaTile({
@@ -32,9 +31,15 @@ class _MediaTileState extends State<MediaTile>
     super.initState();
   }
 
+  Uint8List? data;
+
   Future<Uint8List?> _getAssetThumbnail(AssetEntity asset) async {
-    return await asset.thumbnailDataWithSize(ThumbnailSize(350, 350),
-        quality: 80);
+    if (data == null) {
+      data = await asset.thumbnailDataWithSize(ThumbnailSize(195, 195),
+          quality: 100);
+    }
+
+    return data;
   }
 
   @override
@@ -46,33 +51,17 @@ class _MediaTileState extends State<MediaTile>
   Widget build(BuildContext context) {
     super.build(context);
     return Padding(
+      key: widget.key,
       padding: const EdgeInsets.all(0.5),
       child: Stack(
         children: [
           Positioned.fill(
-            child: FutureBuilder<Uint8List?>(
-                future: _getAssetThumbnail(widget.assetEntity),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return InkWell(
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   HeroDialogRoute(
-                        //       builder: (context) =>
-                        //           MediaDetail(assetEntity: widget.assetEntity)),
-                        // );
-                      },
-                      child: Image.memory(
-                        snapshot.data!,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  }
-                  return LoadingWidget(
-                    decoration: widget.decoration,
-                  );
-                }),
+            child: RepaintBoundary(
+                child: Image(
+              image: AssetEntityImageProvider(widget.assetEntity,
+                  thumbnailSize: ThumbnailSize(195, 195), isOriginal: false),
+              fit: BoxFit.cover,
+            )),
           ),
           StreamBuilder<List<AssetEntity>>(
               stream: StateBehavior.assetEntitiesSelectedStream,

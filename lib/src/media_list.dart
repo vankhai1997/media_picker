@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:media_picker_widget/src/utils.dart';
 import 'package:photo_manager/photo_manager.dart';
+
 import '../media_picker_widget.dart';
-import 'header_controller.dart';
 import 'state_behavior.dart';
 import 'widgets/media_tile.dart';
 
@@ -13,7 +13,6 @@ class MediaList extends StatefulWidget {
     this.mediaCount,
     this.decoration,
     this.maxSelected,
-    this.scrollController,
     required this.onTapCamera,
     required this.onPick,
   });
@@ -21,7 +20,6 @@ class MediaList extends StatefulWidget {
   final AssetPathEntity album;
   final MediaCount? mediaCount;
   final PickerDecoration? decoration;
-  final ScrollController? scrollController;
   final Function() onTapCamera;
   final Function(List<Media> medias) onPick;
   final int? maxSelected;
@@ -81,55 +79,92 @@ class _MediaListState extends State<MediaList> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GridView.builder(
-          controller: widget.scrollController,
-          addAutomaticKeepAlives: false,
-          itemCount: _mediaList.length + 1,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: 2,
-              crossAxisSpacing: 2,
-              crossAxisCount: widget.decoration!.columnCount),
-          itemBuilder: (BuildContext context, int i) {
-            if (i == 0) {
-              return InkWell(
-                onTap: widget.onTapCamera,
-                child: Stack(
-                  alignment: Alignment.center,
-                  fit: StackFit.expand,
-                  children: [
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.camera_alt,
-                            size: 36,
-                            color: Colors.black.withOpacity(0.5),
-                          ),
-                          Text(
-                            'Chụp ảnh',
-                            style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
-                                fontSize: 16),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+        _mediaList.isEmpty
+            ? Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  height: 36,
+                  width: 36,
+                  child: CircularProgressIndicator.adaptive(
+                    backgroundColor: Colors.white,
+                    strokeWidth: 3,
+                  ),
                 ),
-              );
-            }
-            final index = i - 1;
-            if (index == _mediaList.length - 20 && !empty) {
-              _fetchNewMedia();
-            }
-            return MediaTile(
-              maxSelect: widget.maxSelected,
-              assetEntity: _mediaList[index],
-              decoration: widget.decoration,
-            );
-          },
-        ),
+              )
+            : CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: <Widget>[
+                    SliverGrid(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, int i) => Builder(
+                          builder: (BuildContext _context) {
+                            if (i == 0) {
+                              return InkWell(
+                                onTap: widget.onTapCamera,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  fit: StackFit.expand,
+                                  children: [
+                                    Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.camera_alt,
+                                            size: 36,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                          ),
+                                          Text(
+                                            'Chụp ảnh',
+                                            style: TextStyle(
+                                                color: Colors.black
+                                                    .withOpacity(0.5),
+                                                fontSize: 16),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+
+                            final index = i - 1;
+                            if (index == _mediaList.length - 5 && !empty) {
+                              _fetchNewMedia();
+                            }
+                            return MergeSemantics(
+                              child: Directionality(
+                                  textDirection: Directionality.of(context),
+                                  child: MediaTile(
+                                    key: ValueKey<String>(_mediaList[index].id),
+                                    maxSelect: widget.maxSelected,
+                                    assetEntity: _mediaList[index],
+                                    decoration: widget.decoration,
+                                  )),
+                            );
+                          },
+                        ),
+                        childCount: _mediaList.length + 1,
+                        findChildIndexCallback: (Key? key) {
+                          if (key is ValueKey<String>) {
+                            return _mediaList
+                                .indexWhere((e) => e.id == key.value);
+                          }
+                          return null;
+                        },
+                        // Explicitly disable semantic indexes for custom usage.
+                        addSemanticIndexes: false,
+                      ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 2,
+                        crossAxisSpacing: 2,
+                      ),
+                    ),
+                  ]),
         Positioned(
             bottom: 8 + MediaQuery.of(context).padding.bottom,
             left: 32,
@@ -155,6 +190,7 @@ class _MediaListState extends State<MediaList> {
   }
 
   _fetchNewMedia() async {
+    print('_MediaListState._fetchNewMedia');
     lastPage = currentPage;
     var result = await PhotoManager.requestPermissionExtend();
     if (result == PermissionState.limited ||
