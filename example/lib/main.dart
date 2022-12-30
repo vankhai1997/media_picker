@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
-import 'package:photo_manager/photo_manager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         children: List.generate(mediaList.length,
-            (index) => Image.memory(mediaList[index].thumbnail)),
+            (index) => Image.file(File(mediaList[index].thumbPath))),
       ),
     );
   }
@@ -84,9 +83,10 @@ class _MyHomePageState extends State<MyHomePage> {
               columnCount: 4,
               actionBarPosition: ActionBarPosition.top,
               blurStrength: 2,
-              completeText: 'Next', warningText: '',
+              completeText: 'Next',
+              warningText: '',
             ),
-            captureCamera: (Media value) {},
+            captureCamera: (List<Media> value) {},
           );
         });
   }

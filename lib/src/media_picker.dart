@@ -13,7 +13,7 @@ class MediaPicker extends StatefulWidget {
   });
 
   final ValueChanged<List<Media>> onPick;
-  final ValueChanged<Media> captureCamera;
+  final ValueChanged<List<Media>> captureCamera;
   final VoidCallback onCancel;
   final MediaCount mediaCount;
   final MediaType mediaType;
@@ -77,23 +77,26 @@ class _MediaPickerState extends State<MediaPicker> {
     );
   }
 
-  _openCamera({required ValueChanged<Media> onCapture}) async {
+  _openCamera({required ValueChanged<List<Media>> onCapture}) async {
     final ImagePicker _picker = ImagePicker();
     final XFile? pickedFile = await _picker.pickImage(
-        source: ImageSource.camera, maxHeight: 1024, maxWidth: 896);
+        source: ImageSource.camera,
+        maxHeight: 1024,
+        maxWidth: 896,
+        imageQuality: 90);
     if (pickedFile != null) {
-      final _byte = await pickedFile.readAsBytes();
       Media converted = Media(
         id: UniqueKey().toString(),
-        thumbnail: _byte,
         creationTime: DateTime.now(),
         path: pickedFile.path,
+        thumbPath: pickedFile.path,
         mediaType: 'image',
-        mediaByte: await pickedFile.readAsBytes(),
+        width: 896,
+        height: 1024,
         title: pickedFile.path,
       );
       StateBehavior.clearAssetEntitiesSelected();
-      onCapture(converted);
+      onCapture([converted]);
     }
   }
 

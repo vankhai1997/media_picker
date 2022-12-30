@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  path_provider: ^2.0.1
   photo_manager: ^2.5.2
   sliding_up_panel: ^2.0.0+1
   image_picker: ^0.8.3+2
