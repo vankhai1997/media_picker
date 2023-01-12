@@ -1,6 +1,8 @@
 part of media_picker_widget;
 
-class MediaPicker extends StatefulWidget {
+
+
+class MediaPicker extends StatelessWidget {
   MediaPicker({
     required this.onPick,
     required this.onCancel,
@@ -20,61 +22,40 @@ class MediaPicker extends StatefulWidget {
   final PickerDecoration? decoration;
   final ScrollController? scrollController;
   final int? maxSelect;
-
-  @override
-  _MediaPickerState createState() => _MediaPickerState();
-}
-
-class _MediaPickerState extends State<MediaPicker> {
-  PickerDecoration? decoration;
-
-  AssetPathEntity? selectedAlbum;
-  List<AssetPathEntity>? _albums;
-
-  PanelController albumController = PanelController();
-  HeaderController headerController = HeaderController();
-  bool _showWarning = false;
-
-  @override
-  void initState() {
-    _fetchAlbums();
-    decoration = widget.decoration ?? PickerDecoration();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    StateBehavior.clearAssetEntitiesSelected();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
-      child: _albums == null
-          ? CupertinoActivityIndicator()
-          : _albums!.isEmpty
-              ? NoMedia()
-              : Column(
-                  children: [
-                    if (decoration!.actionBarPosition == ActionBarPosition.top)
-                      _buildWarning(),
-                    Expanded(
-                      child: MediaList(
-                        maxSelected: widget.maxSelect,
-                        album: selectedAlbum!,
-                        mediaCount: widget.mediaCount,
-                        decoration: widget.decoration,
-                        onTapCamera: () {
-                          _openCamera(onCapture: widget.captureCamera);
-                        },
-                        onPick: widget.onPick,
-                      ),
-                    ),
-                  ],
-                ),
-    );
+        color: Colors.transparent,
+        child: GetBuilder<MediaController>(
+          init: MediaController(mediaType),
+          global: false,
+          builder: (controller) {
+            return controller.albums == null
+                ? CupertinoActivityIndicator()
+                : controller.emptyData
+                    ? NoMedia()
+                    : Column(
+                        children: [
+                          if (decoration!.actionBarPosition ==
+                              ActionBarPosition.top)
+                            _buildWarning(controller.showWarning),
+                          Expanded(
+                            child: MediaList(
+                              maxSelected: maxSelect,
+                              album: controller.albums!,
+                              mediaCount: mediaCount,
+                              decoration: decoration,
+                              onTapCamera: () {
+                                _openCamera(onCapture: captureCamera);
+                              },
+                              onPick: onPick,
+                              controller: controller,
+                            ),
+                          ),
+                        ],
+                      );
+          },
+        ));
   }
 
   _openCamera({required ValueChanged<List<Media>> onCapture}) async {
@@ -95,14 +76,13 @@ class _MediaPickerState extends State<MediaPicker> {
         height: 1024,
         title: pickedFile.path,
       );
-      StateBehavior.clearAssetEntitiesSelected();
       onCapture([converted]);
     }
   }
 
-  Widget _buildWarning() {
+  Widget _buildWarning(bool showWarning) {
     return Visibility(
-      visible: _showWarning,
+      visible: showWarning,
       child: Container(
           color: Color(0xFFE5E9F2),
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -126,51 +106,5 @@ class _MediaPickerState extends State<MediaPicker> {
                 ]),
           )),
     );
-  }
-
-  Widget _buildHeader() {
-    return Header(
-      onBack: handleBackPress,
-      onDone: () {},
-      albumController: albumController,
-      selectedAlbum: selectedAlbum!,
-      controller: headerController,
-      mediaCount: widget.mediaCount,
-      decoration: decoration,
-    );
-  }
-
-  _fetchAlbums() async {
-    RequestType type = RequestType.common;
-    if (widget.mediaType == MediaType.all)
-      type = RequestType.common;
-    else if (widget.mediaType == MediaType.video)
-      type = RequestType.video;
-    else if (widget.mediaType == MediaType.image) type = RequestType.image;
-    var result = await PhotoManager.requestPermissionExtend();
-    if (result == PermissionState.limited) {
-      setState(() {
-        _showWarning = true;
-      });
-    }
-    if (result == PermissionState.limited ||
-        result == PermissionState.authorized) {
-      List<AssetPathEntity> albums =
-          await PhotoManager.getAssetPathList(type: type, onlyAll: true);
-      setState(() {
-        _albums = albums;
-        if (albums.isEmpty) return;
-        selectedAlbum = _albums![0];
-      });
-    } else {
-      PhotoManager.openSetting();
-    }
-  }
-
-  void handleBackPress() {
-    if (albumController.isPanelOpen)
-      albumController.close();
-    else
-      widget.onCancel();
   }
 }
