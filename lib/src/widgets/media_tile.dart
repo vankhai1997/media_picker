@@ -66,7 +66,7 @@ class MediaTile extends StatelessWidget {
                 final selected = controller.isSelected(assetEntity);
                 return InkWell(
                   onTap: () {
-                    if (!selected &&
+                    if (selected &&
                         controller.assetEntities.length == maxSelect) {
                       return;
                     }
