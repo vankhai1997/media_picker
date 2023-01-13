@@ -24,55 +24,57 @@ class MediaTile extends StatelessWidget {
     return Padding(
       key: key,
       padding: const EdgeInsets.all(0.5),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: RepaintBoundary(
-                child: Image(
-              image: AssetEntityImageProvider(assetEntity,
-                  thumbnailSize: ThumbnailSize(195, 195), isOriginal: false),
-              fit: BoxFit.cover,
-            )),
-          ),
-          Obx(() {
-            final selected = controller.isSelected(assetEntity);
-            return selected
-                ? AnimatedOpacity(
-                    opacity: selected ? 1 : 0,
-                    duration: const Duration(milliseconds: 500),
-                    child: Container(
-                      color: Colors.white.withOpacity(0.4),
-                    ),
-                  )
-                : SizedBox();
-          }),
-          if (assetEntity.type == AssetType.video)
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: Colors.black.withOpacity(0.3)),
-                  child: Text(MediaPickerUtils.intTimeHs(assetEntity.duration),
-                      style: TextStyle(color: Colors.white, fontSize: 10))),
+      child: GestureDetector(
+        onTap: () {
+          final selected = controller.isSelected(assetEntity);
+          if (!selected &&
+              controller.assetEntitiesSelected.length == maxSelect) {
+            return;
+          }
+          controller.onSelected(assetEntity);
+        },
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: RepaintBoundary(
+                  child: Image(
+                image: AssetEntityImageProvider(assetEntity,
+                    thumbnailSize: ThumbnailSize(195, 195), isOriginal: false),
+                fit: BoxFit.cover,
+              )),
             ),
-          Align(
-              alignment: Alignment.topRight,
-              child: Obx(() {
-                final selected = controller.isSelected(assetEntity);
-                return InkWell(
-                  onTap: () {
-                    if (selected &&
-                        controller.assetEntities.length == maxSelect) {
-                      return;
-                    }
-                    controller.onSelected(assetEntity);
-                  },
-                  child: Padding(
+            Obx(() {
+              final selected = controller.isSelected(assetEntity);
+              return selected
+                  ? AnimatedOpacity(
+                      opacity: selected ? 1 : 0,
+                      duration: const Duration(milliseconds: 500),
+                      child: Container(
+                        color: Colors.white.withOpacity(0.4),
+                      ),
+                    )
+                  : SizedBox();
+            }),
+            if (assetEntity.type == AssetType.video)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.black.withOpacity(0.3)),
+                    child: Text(
+                        MediaPickerUtils.intTimeHs(assetEntity.duration),
+                        style: TextStyle(color: Colors.white, fontSize: 10))),
+              ),
+            Align(
+                alignment: Alignment.topRight,
+                child: Obx(() {
+                  final selected = controller.isSelected(assetEntity);
+                  return Padding(
                     padding: const EdgeInsets.all(6),
                     child: Container(
                       decoration: BoxDecoration(
@@ -105,10 +107,10 @@ class MediaTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                );
-              })),
-        ],
+                  );
+                })),
+          ],
+        ),
       ),
     );
   }

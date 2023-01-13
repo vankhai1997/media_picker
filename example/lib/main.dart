@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (context) {
           return MediaPicker(
-            maxSelect: 100,
+            maxSelect: 2,
             onPick: (selectedList) {
               setState(() {
                 mediaList.addAll(selectedList);
