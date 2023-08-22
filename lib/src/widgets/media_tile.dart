@@ -39,7 +39,7 @@ class MediaTile extends StatelessWidget {
               child: RepaintBoundary(
                   child: Image(
                 image: AssetEntityImageProvider(assetEntity,
-                    thumbnailSize: ThumbnailSize(195, 195), isOriginal: false),
+                    thumbnailSize: ThumbnailSize(250, 250), isOriginal: false),
                 fit: BoxFit.cover,
               )),
             ),
