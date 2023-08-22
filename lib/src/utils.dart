@@ -19,9 +19,8 @@ class MediaPickerUtils {
     if (media.type == AssetType.image) {
       final _originFile = (await media
           .thumbnailDataWithSize(ThumbnailSize(960, 1280), quality: 95));
-      final _file = await _byteToImageFile(
-          media.title ?? media.createDateTime.toString(), _originFile!,
-          isThumb: false);
+      final _file =
+          await _byteToImageFile(media.id, _originFile!, isThumb: false);
       convertedMedia.path = _file.path;
     } else {
       convertedMedia.path = (await media.file)!.path;
@@ -29,9 +28,8 @@ class MediaPickerUtils {
     final _thumbByte = (await media
         .thumbnailDataWithSize(ThumbnailSize(960, 1280), quality: 40));
 
-    final _thumbFile = await _byteToImageFile(
-        media.title ?? media.createDateTime.toString(), _thumbByte!,
-        isThumb: true);
+    final _thumbFile =
+        await _byteToImageFile(media.id, _thumbByte!, isThumb: true);
 
     convertedMedia.thumbPath = _thumbFile.path;
     final wh = await _getWHImage(_thumbFile.path);
@@ -42,7 +40,7 @@ class MediaPickerUtils {
     convertedMedia.title = media.title;
     convertedMedia.creationTime = media.createDateTime;
     convertedMedia.creationTime = media.createDateTime;
-
+    print('MediaPickerUtils.convertToMedia  ${convertedMedia.thumbPath}');
     return convertedMedia;
   }
 
@@ -76,7 +74,7 @@ class MediaPickerUtils {
       String fileName, Uint8List compressedFile,
       {String ext = 'jpeg', bool isThumb = false}) async {
     final tempDir = await _fileLocalPathCache();
-    final _rename = "${fileName.split('.').first}${isThumb ? 'thumb' : ""}";
+    final _rename = "${fileName.split('/').first}${isThumb ? 'thumb' : ""}";
     final File file = File('$tempDir${Platform.pathSeparator}$_rename.$ext');
     final _exist = await _checkFileImageExist(_rename, ext: ext);
     if (_exist != null) {
